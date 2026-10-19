@@ -362,8 +362,7 @@ function renderTours(){
  $('#no-results').hidden=matches.length>0;syncChips();
 }
 function resetFilters(){destinationFilter='';$('#region').value='Kerala';$('#style').value='all';$('#duration').value='all';renderTours()}
-$('#finder').addEventListener('submit',e=>{e.preventDefault();renderTours();$('#journeys').scrollIntoView()});
-$('#region').addEventListener('change',()=>{destinationFilter=''});
+$('#finder').addEventListener('submit',e=>{e.preventDefault();destinationFilter='';renderTours();$('#journeys').scrollIntoView()});
 document.querySelectorAll('[data-style]').forEach(b=>b.addEventListener('click',()=>{$('#style').value=b.dataset.style;renderTours()}));
 document.querySelectorAll('[data-destination]').forEach(b=>b.addEventListener('click',()=>{
  destinationFilter=b.dataset.destination;
