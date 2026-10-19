@@ -346,8 +346,8 @@ const escapeHTML = (s) => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'
 function notify(message){$('#toast').textContent=message;$('#toast').classList.add('visible');clearTimeout(notify.timer);notify.timer=setTimeout(()=>$('#toast').classList.remove('visible'),3500)}
 function syncChips(){
  document.querySelectorAll('[data-style]').forEach(b=>{const active=b.dataset.style===$('#style').value;b.classList.toggle('active',active);b.setAttribute('aria-pressed',String(active))});
- document.querySelectorAll('[data-destination]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.destination===destinationFilter)));
- document.querySelectorAll('.scope-button[data-region]').forEach(b=>{const active=b.dataset.region===$('#region').value;b.classList.toggle('active',active);b.setAttribute('aria-pressed',String(active))});
+ const scope=['Kerala','South'].includes($('#region').value)?'Kerala':'all';
+ document.querySelectorAll('.scope-button[data-region]').forEach(b=>{const active=b.dataset.region===scope;b.classList.toggle('active',active);b.setAttribute('aria-pressed',String(active))});
 }
 function renderTours(){
  const region=$('#region').value,style=$('#style').value,duration=$('#duration').value;
