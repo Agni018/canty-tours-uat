@@ -1,0 +1,87 @@
+.finder {
+  position: relative;
+  margin-top: -32px;
+  display: grid;
+  grid-template-columns: 1fr 1.15fr 1fr auto;
+  align-items: center;
+  background: #fff;
+  padding: 22px 24px;
+  border-radius: 7px;
+  box-shadow: 0 12px 35px #1d3e3610;
+  z-index: 2;
+}
+.finder label {
+  padding: 0 24px;
+  border-right: 1px solid var(--line);
+}
+.finder label:first-child {
+  padding-left: 4px;
+}
+.finder label > span {
+  display: block;
+  letter-spacing: 1.5px;
+  font-size: 9px;
+  color: #758076;
+  font-weight: 700;
+  margin-bottom: 5px;
+}
+.finder select {
+  border: none;
+  background: transparent;
+  color: var(--ink);
+  width: 100%;
+  font-size: 13px;
+  padding: 4px 20px 4px 0;
+}
+.finder .submit {
+  margin-left: 22px;
+  white-space: nowrap;
+}
+
+@media (max-width: 1100px) {
+  .finder {
+    padding: 20px 15px;
+  }
+  .finder label {
+    padding: 0 14px;
+  }
+  .finder .submit {
+    padding: 15px;
+    margin-left: 12px;
+    font-size: 11px;
+  }
+}
+@media (max-width: 800px) {
+  .finder {
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    padding: 24px;
+  }
+  /* !important also clears the first label's extra padding. */
+  .finder label {
+    padding: 0 !important;
+    border: none;
+  }
+  .finder .submit {
+    margin: 0;
+    font-size: 12px;
+  }
+}
+@media (max-width: 540px) {
+  .finder {
+    padding: 22px 18px;
+    gap: 19px 15px;
+  }
+  .finder select {
+    font-size: 11px;
+  }
+  .finder label > span {
+    font-size: 7px;
+    letter-spacing: 1px;
+  }
+  .finder .submit {
+    padding: 13px 12px;
+    font-size: 10px;
+    gap: 10px;
+  }
+}

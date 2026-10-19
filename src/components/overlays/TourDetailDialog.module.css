@@ -1,0 +1,51 @@
+.image {
+  height: 230px;
+  border-radius: 6px;
+  margin-bottom: 25px;
+}
+.route {
+  margin: 7px 0 20px;
+}
+.days {
+  list-style: none;
+  padding: 0;
+  margin: 25px 0;
+}
+.days li {
+  display: flex;
+  gap: 20px;
+  border-top: 1px solid var(--line);
+  padding: 16px 0;
+  font-size: 12px;
+}
+.days strong {
+  min-width: 62px;
+  font-size: 10px;
+}
+.footer {
+  background: #e9edde;
+  padding: 20px;
+  border-radius: 4px;
+  margin: 20px 0;
+}
+/* ".content" outranks Modal's ".modal p" and ".modal h3". */
+.content .footer p {
+  font-size: 11px;
+}
+.content .footer h3 {
+  font-size: 13px;
+  margin: 0 0 7px;
+}
+
+@media (max-width: 540px) {
+  .image {
+    height: 190px;
+    margin-top: 25px;
+  }
+  .days li {
+    gap: 12px;
+  }
+  .days strong {
+    min-width: 53px;
+  }
+}

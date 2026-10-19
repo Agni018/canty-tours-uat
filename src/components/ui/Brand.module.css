@@ -1,0 +1,36 @@
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font: 39px/0.9 var(--serif);
+  letter-spacing: -1px;
+}
+.brand svg {
+  width: 43px;
+  height: 43px;
+}
+.sub {
+  display: block;
+  font: 8px/1 var(--sans);
+  font-weight: 600;
+  letter-spacing: 2.4px;
+  margin-top: 8px;
+}
+
+@media (max-width: 800px) {
+  .brand {
+    font-size: 33px;
+  }
+  .brand svg {
+    width: 36px;
+    height: 36px;
+  }
+  .sub {
+    font-size: 6px;
+  }
+}
+@media (max-width: 540px) {
+  .brand svg {
+    display: none;
+  }
+}

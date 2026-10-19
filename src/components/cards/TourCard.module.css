@@ -1,0 +1,132 @@
+.card {
+  border: 1px solid #dde0d5;
+  background: #fff;
+  border-radius: 7px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+.photo {
+  height: 225px;
+  position: relative;
+  overflow: hidden;
+}
+.photo img {
+  height: 100%;
+  transition: transform 0.7s;
+}
+.card:hover .photo img {
+  transform: scale(1.045);
+}
+.photo .tag {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  background: #fffdf3ed;
+  padding: 5px 10px;
+  border-radius: 3px;
+  font-size: 9px;
+  letter-spacing: 0.4px;
+}
+.body {
+  padding: 23px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+.meta {
+  font-size: 9px;
+  color: #7a806f;
+  letter-spacing: 1.25px;
+  margin-bottom: 10px;
+  text-transform: uppercase;
+  line-height: 1.6;
+}
+.body h3 {
+  font: 29px/1.1 var(--serif);
+  margin-bottom: 12px;
+  letter-spacing: -0.5px;
+  min-height: 2.2em;
+}
+.route {
+  font-size: 11px;
+  min-height: 36px;
+}
+.desc {
+  font-size: 12px;
+  margin-top: 11px;
+  margin-bottom: 21px;
+  min-height: 44px;
+  line-height: 1.7;
+}
+.bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-top: 1px solid #e4e6dd;
+  margin-top: auto;
+  padding-top: 17px;
+}
+.quote {
+  font-size: 12px;
+  font-weight: 600;
+}
+.quote small {
+  display: block;
+  font-size: 9px;
+  font-weight: 400;
+  color: #7b847b;
+}
+.details {
+  border: 0;
+  background: transparent;
+  padding: 6px 0;
+  font-size: 11px;
+  font-weight: 600;
+}
+.compare {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 17px;
+  font-size: 10px;
+  color: #63766c;
+  cursor: pointer;
+}
+.compare input {
+  accent-color: var(--ink);
+  height: 15px;
+  width: 15px;
+}
+
+@media (max-width: 1100px) {
+  .photo {
+    height: 195px;
+  }
+  .body {
+    padding: 18px;
+  }
+  .body h3 {
+    font-size: 26px;
+  }
+}
+@media (max-width: 800px) {
+  .body h3 {
+    min-height: 0;
+  }
+}
+@media (max-width: 540px) {
+  .photo {
+    height: 230px;
+  }
+  .body {
+    padding: 22px;
+  }
+  .body h3 {
+    font-size: 31px;
+  }
+  .route,
+  .desc {
+    min-height: 0;
+  }
+}

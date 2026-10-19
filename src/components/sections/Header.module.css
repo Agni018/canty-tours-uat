@@ -1,0 +1,98 @@
+.topline {
+  padding: 7px 48px;
+  display: flex;
+  justify-content: space-between;
+  background: var(--ink);
+  color: #f2eee3;
+  font-size: 10px;
+  letter-spacing: 0.3px;
+}
+.header {
+  height: 94px;
+  padding: 0 48px;
+  display: flex;
+  align-items: center;
+  gap: 30px;
+  background: var(--cream);
+  position: relative;
+  z-index: 5;
+}
+.header nav {
+  display: flex;
+  gap: 29px;
+  margin: auto;
+  font-size: 12px;
+  font-weight: 500;
+}
+.header nav a:hover {
+  color: var(--orange);
+}
+.menuToggle {
+  display: none;
+}
+
+@media (max-width: 1100px) {
+  .header {
+    padding: 0 32px;
+    gap: 22px;
+  }
+  .header nav {
+    gap: 18px;
+    font-size: 11px;
+  }
+}
+@media (max-width: 800px) {
+  .topline {
+    justify-content: center;
+  }
+  .topline > span {
+    display: none;
+  }
+  .header {
+    height: 82px;
+    padding: 0 24px;
+  }
+  .header nav {
+    display: none;
+    position: absolute;
+    top: 82px;
+    left: 0;
+    right: 0;
+    background: var(--cream);
+    padding: 25px;
+    box-shadow: 0 8px 15px #0001;
+    flex-direction: column;
+    font-size: 15px;
+  }
+  .header nav.open {
+    display: flex;
+  }
+  .menuToggle {
+    display: block;
+    border: 0;
+    background: transparent;
+    font-size: 11px;
+    margin-left: auto;
+  }
+  /* !important beats Button's .button.small padding. */
+  .header .navCta {
+    padding: 10px 15px !important;
+    font-size: 11px;
+  }
+}
+@media (max-width: 540px) {
+  .header {
+    padding: 0 20px;
+    height: 77px;
+    gap: 15px;
+  }
+  .header nav {
+    top: 77px;
+  }
+  .header .navCta {
+    font-size: 10px;
+  }
+  .menuToggle {
+    padding: 5px 0;
+  }
+}

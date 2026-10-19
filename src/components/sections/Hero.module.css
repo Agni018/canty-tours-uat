@@ -1,0 +1,162 @@
+.hero {
+  height: 620px;
+  position: relative;
+  overflow: hidden;
+  color: #fff;
+  margin: 0 18px;
+  border-radius: 8px;
+}
+.image {
+  height: 100%;
+  object-position: 50% 59%;
+}
+.shade {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(90deg, #08201bbf, #08201b1f 80%),
+    linear-gradient(0deg, #091913a6, transparent 55%);
+}
+.content {
+  position: absolute;
+  top: 70px;
+  left: max(6.3%, 35px);
+}
+.content h1 {
+  font-size: 102px;
+  line-height: 0.96;
+  letter-spacing: -2px;
+  margin-bottom: 24px;
+}
+.content h1 em {
+  color: #efd9b3;
+}
+.content > p:not(.eyebrow) {
+  font-size: 15px;
+  line-height: 1.8;
+  color: #f1f2e8;
+  margin-bottom: 27px;
+}
+.hero .eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 9px;
+}
+.hero .eyebrow span {
+  width: 24px;
+  height: 1px;
+  background: #e7d8bd;
+}
+.secondary {
+  display: block;
+  width: fit-content;
+  margin-top: 18px;
+  color: #f5eee1;
+  font-size: 11px;
+  text-underline-offset: 5px;
+}
+.secondary:hover {
+  text-decoration: underline;
+}
+.location {
+  position: absolute;
+  right: 5%;
+  bottom: 65px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  font-size: 9px;
+  letter-spacing: 1.5px;
+}
+.dot {
+  width: 8px;
+  height: 8px;
+  border: 2px solid #eac49a;
+  border-radius: 50%;
+  box-shadow: 0 0 0 6px #ffffff18;
+}
+.location small {
+  display: block;
+  font-size: 11px;
+  letter-spacing: 0;
+  color: #e2e5d8;
+  margin-top: 2px;
+}
+.number {
+  margin-left: 25px;
+  padding-left: 25px;
+  border-left: 1px solid #ffffff66;
+  font-size: 9px;
+}
+
+@media (max-width: 800px) {
+  .hero {
+    height: 600px;
+    margin: 0 12px;
+  }
+  .content {
+    left: 32px;
+    top: 55px;
+  }
+  .content h1 {
+    font-size: 84px;
+  }
+  .location {
+    right: 30px;
+    bottom: 62px;
+  }
+  .number {
+    display: none;
+  }
+}
+@media (max-width: 540px) {
+  .hero {
+    height: 565px;
+    margin: 0 9px;
+  }
+  .image {
+    object-position: 60%;
+  }
+  .shade {
+    background:
+      linear-gradient(90deg, #092c23bf, #092c2340),
+      linear-gradient(0deg, #092c2380, transparent);
+  }
+  .content {
+    left: 25px;
+    right: 20px;
+    top: 43px;
+  }
+  .content .eyebrow {
+    font-size: 7px;
+    letter-spacing: 1.6px;
+  }
+  .content h1 {
+    font-size: 72px;
+  }
+  .content > p:not(.eyebrow) {
+    font-size: 12px;
+    max-width: 280px;
+  }
+  .desktop {
+    display: none;
+  }
+  .content .cta {
+    font-size: 11px;
+    padding: 14px 18px;
+  }
+  .location {
+    left: 31px;
+    right: auto;
+    bottom: 57px;
+    font-size: 8px;
+  }
+  .location small {
+    font-size: 9px;
+  }
+  .secondary {
+    font-size: 10px;
+    margin-top: 16px;
+  }
+}

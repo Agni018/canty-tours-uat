@@ -1,0 +1,84 @@
+"use client";
+
+import type { ReactNode } from "react";
+import { useJourneys } from "@/components/JourneyProvider";
+import { Button } from "@/components/ui/Button";
+import { Modal } from "@/components/ui/Modal";
+import { tours, type Tour } from "@/data/tours";
+import styles from "./CompareDialog.module.css";
+
+/** Side-by-side table of the selected journeys. */
+export function CompareDialog() {
+  const { compared, compareOpen, setCompareOpen, planTour } = useJourneys();
+  const items = tours.filter((t) => compared.includes(t.id));
+
+  const rows: [string, (t: Tour) => ReactNode][] = [
+    ["Duration", (t) => `${t.days} days / ${t.nights} nights`],
+    ["Route", (t) => t.route],
+    ["Travel style", (t) => t.style],
+    ["Pace", (t) => t.pace],
+    ["A good fit for", (t) => t.ideal],
+    ["Highlights", (t) => t.highlights],
+    ["Price", () => "Personalised quote"],
+    [
+      "Next step",
+      (t) => (
+        <Button className={styles.planButton} onClick={() => planTour(t.id)}>
+          Plan this trip ↗
+        </Button>
+      ),
+    ],
+  ];
+
+  return (
+    <Modal
+      id="compare-dialog"
+      wide
+      open={compareOpen}
+      onClose={() => setCompareOpen(false)}
+      labelledBy="compare-title"
+      closeLabel="Close comparison"
+    >
+      <p className="eyebrow">FIND YOUR KIND OF JOURNEY</p>
+      <h2 id="compare-title">A little side by side.</h2>
+      <div id="compare-content">
+        {compareOpen && (
+          <>
+            <div
+              className={styles.scroll}
+              tabIndex={0}
+              aria-label="Journey comparison table; scroll horizontally on smaller screens"
+            >
+              <table className={styles.table}>
+                <thead>
+                  <tr>
+                    <th scope="col">Your journey</th>
+                    {items.map((t) => (
+                      <th scope="col" key={t.id}>
+                        {t.name}
+                      </th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {rows.map(([label, value]) => (
+                    <tr key={label}>
+                      <th scope="row">{label}</th>
+                      {items.map((t) => (
+                        <td key={t.id}>{value(t)}</td>
+                      ))}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            <p className="fineprint">
+              Sample routes, not confirmed packages. Your final itinerary and
+              inclusions will be agreed in writing.
+            </p>
+          </>
+        )}
+      </div>
+    </Modal>
+  );
+}

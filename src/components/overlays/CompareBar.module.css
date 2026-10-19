@@ -1,0 +1,39 @@
+.bar {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(660px, calc(100% - 24px));
+  background: #fff;
+  color: var(--ink);
+  border: 1px solid var(--line);
+  padding: 16px 23px;
+  border-radius: 10px;
+  box-shadow: 0 5px 50px #0003;
+  z-index: 7;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+  font-size: 12px;
+}
+.bar > div {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+@media (max-width: 540px) {
+  .bar {
+    padding: 12px;
+    font-size: 10px;
+  }
+  .bar > div {
+    gap: 12px;
+  }
+  /* The extra "div" outranks Button's .button.small padding. */
+  .bar > div > .open {
+    font-size: 10px;
+    padding: 10px 12px;
+  }
+}

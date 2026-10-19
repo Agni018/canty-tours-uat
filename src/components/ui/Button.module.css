@@ -1,0 +1,31 @@
+.button {
+  border: 0;
+  border-radius: 5px;
+  background: var(--ink);
+  color: white;
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 26px;
+  padding: 17px 24px;
+  font-size: 13px;
+  font-weight: 600;
+  transition: 0.2s;
+}
+.button:hover {
+  background: #2b5849;
+  transform: translateY(-2px);
+}
+.button span {
+  font-size: 20px;
+  line-height: 1;
+}
+.button.orange {
+  background: var(--orange);
+}
+.button.orange:hover {
+  background: #bb542b;
+}
+.button.small {
+  padding: 12px 20px;
+}

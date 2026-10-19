@@ -1,0 +1,19 @@
+.chip {
+  background: transparent;
+  border: 1px solid #cfd5ca;
+  border-radius: 30px;
+  padding: 10px 18px;
+  font-size: 11px;
+}
+.chip.active {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: white;
+}
+
+@media (max-width: 800px) {
+  .chip {
+    font-size: 10px;
+    padding: 8px 13px;
+  }
+}

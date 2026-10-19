@@ -1,35 +1,93 @@
 # Canty Tours
-Responsive static travel website with Kerala as the main focus and journeys across India. Business contact: +91 89216 11825, supplied by the owner.
 
-## Run
-Open `index.html` directly, or use Node.js for a local HTTP preview:
+Website for Canty Tours: Kerala-first holiday ideas, journeys across India, and a trip planner that
+prepares a WhatsApp message. Business contact: +91 89216 11825.
+
+Built with **Next.js (React + TypeScript)** and exported as a static site to GitHub Pages. There is
+no backend: nothing is stored, and enquiries go to WhatsApp from the visitor's browser.
+
+## Run it
+
+Requires Node.js 20.9 or newer.
 
 ```sh
-node preview.mjs
+npm install      # once
+npm run dev      # http://localhost:3000, reloads on save
 ```
 
-Open http://127.0.0.1:4173. No dependencies or build step are required.
+| Command          | What it does                                           |
+| ---------------- | ------------------------------------------------------ |
+| `npm run dev`    | Local development server                               |
+| `npm test`       | Unit tests (Vitest) for filtering and the enquiry text |
+| `npm run format` | Format every file with Prettier                        |
+| `npm run build`  | Type-check and export the static site to `out/`        |
+| `npm run check`  | Format check + tests + build; the same checks CI runs  |
 
-## Content
-Six Kerala sample itineraries cover Munnar, Thekkady, Alappuzha (Alleppey), Kochi, Kumarakom, Varkala and Wayanad, with family, honeymoon, hills, backwaters and beach options. Kerala is the default collection. The All India collection and Beyond Kerala section retain Rajasthan, Goa, Ladakh, Sikkim and the Golden Triangle.
+## Project structure
 
-Filter by destination, style and duration, compare up to three journeys, and personalise a route in the WhatsApp planner. The planner includes trip length and occasion. It prepares a message for the visitor to review and send; no form details are stored and no booking is made on the site.
+```
+src/
+  app/                  Next.js entry: layout (fonts, metadata), page, global CSS, favicon
+  components/
+    ui/                 Reusable building blocks: Button, TextButton, Chip, Select, Field,
+                        Modal, SectionHeading, Brand
+    cards/              TourCard, DestinationCard, IndiaCard
+    sections/           One component per page section (Header, Hero, FinderBar, Journeys, …)
+    overlays/           Dialogs, compare bar and toast
+    JourneyProvider.tsx Shared page state: filters, comparison, dialogs, planned tour
+  data/                 Content: tours, destinations, dropdown options, contact details
+  lib/                  Pure logic (filtering, labels, WhatsApp text) and its tests
+public/assets/          Photos, served as /assets/…
+maintenance/            Stand-alone "coming soon" page; not part of the build
+```
 
-Routes are illustrative, with prices on request. No testimonials, performance claims, accreditation or rates are fabricated. All quotes and bookings are handled directly with Canty Tours. These are local source updates; deployment and existing hosting are unchanged.
+Each component keeps its styles next to it in a `*.module.css` file (CSS Modules, scoped to that
+component). `src/app/globals.css` holds only colour/font tokens, element defaults and a few shared
+utility classes (`wrap`, `section`, `eyebrow`, `light`, `fineprint`).
 
-## Competitor comparison
+## Common edits
+
+- **Add or change a tour:** edit `src/data/tours.ts`. Put its photo in `public/assets/` (about
+  1200px wide) and set `image` to the file name without `.jpg`.
+- **Change dropdown options:** `src/data/options.ts`.
+- **Change destination cards:** `src/data/destinations.ts`.
+- **Change the phone/WhatsApp number:** `src/data/site.ts`.
+
+## Deploy
+
+Every push to `main` runs `.github/workflows/main.yml`: format check, tests, build, then deploy of
+`out/` to GitHub Pages. Pull requests run the same checks without deploying.
+
+One-time setting: **Settings → Pages → Source = GitHub Actions**. With the old "Deploy from a
+branch" setting, GitHub also publishes the raw repository files and the two deploys overwrite each
+other.
+
+The site is served from a sub-path (`/canty-tours-uat`) on GitHub Pages; the workflow passes it to
+the build as `BASE_PATH`. Image paths go through `asset()` in `src/lib/utils.ts` so they include it.
+
+## Content sources
+
+Routes are illustrative, with prices on request. No testimonials, performance claims, accreditation
+or rates are fabricated. All quotes and bookings are handled directly with Canty Tours.
+
+### Competitor comparison
+
 - Paradise Holidays https://www.paradise-kerala.com/ : Kerala-first navigation, destination browsing, duration-based itinerary ideas, travel styles and planning FAQs. Applied with original Canty copy and sample routes, not competitor prices or business claims. Reviewed 12 October 2026.
 - Route references: [4 days: Munnar and Alappuzha](https://www.paradise-kerala.com/tourpackage/Kerala-Tour-Packages/4days-3nights-alleppey-munnar-kerala-tour/), [5 days: Munnar, Thekkady and Alappuzha](https://www.paradise-kerala.com/tourpackage/Kerala-Tour-Packages/5days-4nights-Alleppey-Thekkady-Munnar/), [North Kerala options](https://www.paradise-kerala.com/tourpackage/North-Kerala-Tour-Packages/). Other routes are original suggested combinations.
 - Planning references: Kerala Tourism’s [seasonal advice](https://www.keralatourism.org/faq/what-should-you-know-before-going-on-vacation-to-kerala), [Munnar access](https://www.keralatourism.org/munnar/location-munnar.php), [Wayanad access](https://www.keralatourism.org/campaigns/kerala365/wayanad-kerala), and [houseboat operator Q&A](https://www.keralatourism.org/travelcare/postdetails/view/14523). Routes require confirmation around actual arrival/departure times and current availability.
 
 Earlier India-wide layout references:
+
 - Thomas Cook https://www.thomascook.in/holidays/ : destination and traveller-interest browsing. Applied as region and style filters.
 - SOTC https://www.sotc.in/holidays : custom holiday enquiry. Applied as a compact WhatsApp trip planner.
 - Thrillophilia https://www.thrillophilia.com/countries/india/tours : scannable journey offerings. Applied as duration, route, itinerary and side-by-side comparison.
+
 Original layout and copy; no competitor branding or proprietary descriptions copied. Earlier references checked 11 October 2026.
 
-## Photos
+### Photos
+
 Downloaded from Unsplash, re-sized for the site, used under the [Unsplash License](https://unsplash.com/license):
+
 - Munnar, Vivek Kumar: https://unsplash.com/photos/tea-gardens-on-munnar-hills-JS_ohjocm00
 - Varkala, Nandu Vasudevan: https://unsplash.com/photos/BU0lMokk7tA
 - Wayanad, Niranjan V S: https://unsplash.com/photos/mountains-covered-in-lush-green-vegetation-stand-tall-rTiBFR2c99c
@@ -39,4 +97,5 @@ Downloaded from Unsplash, re-sized for the site, used under the [Unsplash Licens
 - Taj Mahal: https://images.unsplash.com/photo-1576487248805-cf45f6bcc67f
 - Goa, Arun Prakash: https://unsplash.com/photos/weeJiR-xXC0
 - Sikkim, North Bengal Tourism: https://unsplash.com/photos/E6rnGEJnvYo
-Typography: Google Fonts, DM Sans and Libre Caslon Display, with system fallbacks.
+
+Typography: DM Sans and Libre Caslon Display from Google Fonts, self-hosted at build time by `next/font`.

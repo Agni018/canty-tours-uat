@@ -1,0 +1,9 @@
+.textButton {
+  border: none;
+  padding: 6px 0;
+  background: transparent;
+  font-size: 11px;
+}
+.textButton:hover {
+  text-decoration: underline;
+}

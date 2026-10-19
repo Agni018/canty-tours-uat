@@ -1,0 +1,17 @@
+.toast {
+  position: fixed;
+  bottom: 102px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #17382e;
+  color: white;
+  padding: 12px 20px;
+  border-radius: 6px;
+  font-size: 12px;
+  max-width: 90%;
+  z-index: 11;
+  visibility: hidden;
+}
+.toast.visible {
+  visibility: visible;
+}

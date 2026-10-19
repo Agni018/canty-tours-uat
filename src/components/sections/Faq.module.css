@@ -1,0 +1,79 @@
+.faq {
+  display: grid;
+  grid-template-columns: 0.8fr 1.2fr;
+  gap: 100px;
+}
+.faq > div > p:not(.eyebrow) {
+  margin-top: 25px;
+  font-size: 12px;
+  line-height: 2;
+}
+.faq > div > p a {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+.list details {
+  border-bottom: 1px solid var(--line);
+  padding: 20px 0;
+}
+.list details:first-child {
+  padding-top: 0;
+}
+.list summary {
+  list-style: none;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+}
+.list summary::-webkit-details-marker {
+  display: none;
+}
+.list summary span {
+  font-size: 19px;
+  font-weight: 400;
+  line-height: 1.1;
+}
+.list details[open] summary span {
+  transform: rotate(45deg);
+}
+.list details p {
+  font-size: 12px;
+  padding: 15px 25px 3px 0;
+  line-height: 1.8;
+}
+.list a {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+@media (max-width: 1100px) {
+  .faq {
+    gap: 60px;
+  }
+}
+@media (max-width: 800px) {
+  .faq {
+    gap: 30px;
+  }
+  .faq h2 {
+    font-size: 42px;
+  }
+  .list summary {
+    font-size: 12px;
+  }
+}
+@media (max-width: 540px) {
+  .faq {
+    grid-template-columns: 1fr;
+    gap: 36px;
+  }
+  .faq h2 br {
+    display: none;
+  }
+  .faq > div > p:not(.eyebrow) {
+    font-size: 11px;
+  }
+}
