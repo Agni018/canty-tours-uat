@@ -385,8 +385,7 @@ function selectForPlan(id){
  const length=$('#trip-form').elements.namedItem('tripLength');
  if(length)length.value=t.days<=4?'3–4 days':t.days<=6?'5–6 days':t.days<=8?'7–8 days':'9+ days';
  const occasion=$('#trip-form').elements.namedItem('occasion');
- if(occasion&&t.style==='Family')occasion.value='Family holiday';
- if(occasion&&t.style==='Honeymoon')occasion.value='Honeymoon / couple';
+ if(occasion)occasion.value=t.style==='Family'?'Family holiday':t.style==='Honeymoon'?'Honeymoon / couple':'To discuss';
  $('#plan').scrollIntoView();$('#plan-destination').focus({preventScroll:true});
 }
 $('#plan-destination').addEventListener('input',()=>{if(plannedJourney&&$('#plan-destination').value.trim()!==plannedJourney.destination)plannedJourney=null});
