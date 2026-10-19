@@ -49,7 +49,7 @@ npm run check    # format check + tests + build — run before every commit
 
 - Reuse `src/components/ui/` first: `Button` (variant, small, arrow, href → link), `TextButton`,
   `Chip`, `Select` (options list), `Field` (labelled form control), `Modal` (native dialog),
-  `SectionHeading`, `Brand`. Extend one with a prop before creating a near-duplicate.
+  `SectionHeading`, `Brand`, `Icon`. Extend one with a prop before creating a near-duplicate.
 - One component per file, named export, PascalCase file name, props typed with a `type`.
 - Add `"use client"` only to components that use state, effects or event handlers.
 - Content belongs in `src/data/`, not hard-coded in components, when it is a list or repeats.
@@ -62,15 +62,42 @@ npm run check    # format check + tests + build — run before every commit
 ## Styling rules
 
 - Each component has a `Name.module.css` next to it; class names in camelCase.
-- Use the tokens: `var(--ink)`, `--cream`, `--muted`, `--orange`, `--line`, `--serif`, `--sans`.
+- Use the tokens in `src/app/globals.css`; no raw hex text colours or pixel font sizes in
+  components:
+  - Colour: `--ink`, `--cream`, `--muted`, `--orange`, `--line`, `--on-dark`, `--on-dark-muted`,
+    `--accent-dark`, `--accent-light`.
+  - Type: `--text-label` (12px uppercase labels, with `--tracking-label`), `--text-xs` 13,
+    `--text-sm` 14, `--text-base` 16 (body and form controls), `--text-lg` 18, then fluid
+    headings `--text-xl`, `--text-h3`, `--text-h2`, `--text-h1`, `--text-display`.
+  - Fonts: `--serif` (Fraunces) for headings and card titles, `--sans` (Inter) for everything
+    else. Both are loaded by `next/font` in `src/app/layout.tsx`; italics are real italics.
+- Text is never smaller than 12px. The only exception is the logo lockup in `Brand`.
 - Breakpoints are `max-width` 1100px, 800px and 540px. Put a component's media queries at the end
   of its own module file.
 - Global utility classes (`wrap`, `section`, `eyebrow`, `light`, `fineprint`) come from
   `globals.css`. Don't add new globals for a single component.
 - To restyle a child component from its parent, pass `className` and target it with two classes
   (`.parent .child`) so it wins over the child's own single-class rule. Avoid `!important`.
-- New text is at least 8px (a few older labels are 6–7px; raise them when you touch that
-  component). Keep visible focus outlines and the reduced-motion rule.
+- Keep visible focus outlines.
+
+## Motion rules
+
+- Use the motion tokens: `--ease-out` for things arriving, `--ease-in` for things leaving;
+  `--dur-fast` (hover/press), `--dur-base` (state changes, exits), `--dur-slow` (dialogs,
+  panels), `--dur-reveal` (page-load and scroll reveals). Exits are faster than entrances.
+- Animate only `transform` and `opacity` (plus colours for hover states).
+- Add the global `reveal` class to a block to fade it up as it scrolls into view (CSS scroll
+  timeline, no JavaScript). Put it on containers, not on every card.
+- Use one-shot animations with `backwards` fill so they never block hover transitions.
+- `prefers-reduced-motion: reduce` turns all animation and transitions off in `globals.css`;
+  never work around it, and never make content depend on an animation finishing.
+- Keyframes used by a CSS Module must be defined in that module (names are scoped).
+
+## Icons
+
+- Use `<Icon name="arrow" />` (also `reset`, `spark`) instead of typing ↗ ↺ ✳: the fonts don't
+  contain those glyphs, so they would render differently on every device. Add new icons as
+  paths in `src/components/ui/Icon.tsx`. No emoji as icons.
 
 ## Content rules
 

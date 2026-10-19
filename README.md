@@ -30,7 +30,7 @@ src/
   app/                  Next.js entry: layout (fonts, metadata), page, global CSS, favicon
   components/
     ui/                 Reusable building blocks: Button, TextButton, Chip, Select, Field,
-                        Modal, SectionHeading, Brand
+                        Modal, SectionHeading, Brand, Icon
     cards/              TourCard, DestinationCard, IndiaCard
     sections/           One component per page section (Header, Hero, FinderBar, Journeys, …)
     overlays/           Dialogs, compare bar and toast
@@ -98,4 +98,4 @@ Downloaded from Unsplash, re-sized for the site, used under the [Unsplash Licens
 - Goa, Arun Prakash: https://unsplash.com/photos/weeJiR-xXC0
 - Sikkim, North Bengal Tourism: https://unsplash.com/photos/E6rnGEJnvYo
 
-Typography: DM Sans and Libre Caslon Display from Google Fonts, self-hosted at build time by `next/font`.
+Typography: Fraunces (headings) and Inter (text) from Google Fonts, self-hosted at build time by `next/font`.
