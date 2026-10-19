@@ -3,6 +3,7 @@
 import { useJourneys } from "@/components/JourneyProvider";
 import { Button } from "@/components/ui/Button";
 import { TextButton } from "@/components/ui/TextButton";
+import { Icon } from "@/components/ui/Icon";
 import styles from "./CompareBar.module.css";
 
 /** Floating bar shown while journeys are selected for comparison. */
@@ -24,7 +25,7 @@ export function CompareBar() {
           disabled={count < 2}
           onClick={() => setCompareOpen(true)}
         >
-          Compare journeys ↗
+          Compare journeys <Icon name="arrow" />
         </Button>
       </div>
     </div>

@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import { whatsappLink } from "@/data/site";
 import { cx } from "@/lib/utils";
+import { Icon } from "@/components/ui/Icon";
 import styles from "./Faq.module.css";
 
 const questions: { question: string; answer: ReactNode }[] = [
@@ -21,7 +22,7 @@ const questions: { question: string; answer: ReactNode }[] = [
           target="_blank"
           rel="noopener"
         >
-          Kerala Tourism’s planning advice ↗
+          Kerala Tourism’s planning advice <Icon name="arrow" />
         </a>
       </>
     ),
@@ -53,7 +54,10 @@ const questions: { question: string; answer: ReactNode }[] = [
         {
           "Absolutely. Kerala is our main focus, and you can also explore Rajasthan, Goa, Ladakh, Sikkim and the Golden Triangle here. Tell us about any other Indian destination you have in mind, or "
         }
-        <a href="#beyond-kerala">explore beyond Kerala ↗</a>.
+        <a href="#beyond-kerala">
+          explore beyond Kerala <Icon name="arrow" />
+        </a>
+        .
       </>
     ),
   },
@@ -62,24 +66,24 @@ const questions: { question: string; answer: ReactNode }[] = [
 export function Faq() {
   return (
     <section className={cx("section wrap", styles.faq)} id="faq">
-      <div>
+      <div className="reveal">
         <p className={cx("eyebrow", styles.eyebrow)}>
           A LITTLE KERALA KNOW-HOW
         </p>
         <h2>
-          Before you
-          <br />
+          {/* The space keeps the words apart where the line break is hidden on phones. */}
+          Before you <br />
           follow the green.
         </h2>
         <p>
           From your first arrival to the last sunset.
           <br />
           <a href={whatsappLink()} target="_blank" rel="noopener">
-            Let’s talk through your plans ↗
+            Let’s talk through your plans <Icon name="arrow" />
           </a>
         </p>
       </div>
-      <div className={styles.list}>
+      <div className={cx(styles.list, "reveal")}>
         {questions.map((q) => (
           <details key={q.question}>
             <summary>

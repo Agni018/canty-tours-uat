@@ -1,4 +1,5 @@
 import { asset } from "@/lib/utils";
+import { Icon } from "@/components/ui/Icon";
 import styles from "./DestinationCard.module.css";
 
 type DestinationCardProps = {
@@ -28,7 +29,9 @@ export function DestinationCard({
           {name}
           <small>{details}</small>
         </span>
-        <span className={styles.arrow}>↗</span>
+        <span className={styles.arrow}>
+          <Icon name="arrow" />
+        </span>
       </span>
     </button>
   );

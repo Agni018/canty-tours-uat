@@ -1,13 +1,14 @@
 import { phone, whatsappLink } from "@/data/site";
 import { cx } from "@/lib/utils";
 import { TripForm } from "./TripForm";
+import { Icon } from "@/components/ui/Icon";
 import styles from "./PlanSection.module.css";
 
 export function PlanSection() {
   return (
     <section id="plan" className={styles.section}>
       <div className={cx("wrap", styles.grid)}>
-        <div className={styles.copy}>
+        <div className={cx(styles.copy, "reveal")}>
           <p className={cx("eyebrow light", styles.eyebrow)}>
             FROM “LET’S GO” TO YOUR OWN ITINERARY
           </p>
@@ -28,7 +29,7 @@ export function PlanSection() {
           </p>
           <a className={styles.phone} href={`tel:${phone.tel}`}>
             {`${phone.display} `}
-            <span>↗</span>
+            <Icon name="arrow" />
           </a>
           <p className={styles.note}>
             Prefer to keep it simple?
@@ -41,7 +42,7 @@ export function PlanSection() {
                 "Hi Canty Tours, I'd like to plan a Kerala holiday.",
               )}
             >
-              Say hello on WhatsApp ↗
+              Say hello on WhatsApp <Icon name="arrow" />
             </a>
           </p>
         </div>

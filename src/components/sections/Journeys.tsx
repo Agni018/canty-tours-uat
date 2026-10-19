@@ -11,6 +11,7 @@ import { whatsappLink } from "@/data/site";
 import { tours } from "@/data/tours";
 import { filterTours, isKeralaView, resultsSummary } from "@/lib/journeys";
 import { cx } from "@/lib/utils";
+import { Icon } from "@/components/ui/Icon";
 import styles from "./Journeys.module.css";
 
 /** Filterable journey grid with collection tabs, style chips and the compare checkboxes. */
@@ -65,7 +66,7 @@ export function Journeys() {
             aria-pressed={!keralaView}
             onClick={() => showRegion("all")}
           >
-            All India journeys <span>↗</span>
+            All India journeys <Icon name="arrow" />
           </button>
         </div>
         <div className={styles.filterRow}>
@@ -95,17 +96,22 @@ export function Journeys() {
             className={styles.reset}
             onClick={resetFilters}
           >
-            Reset filters ↺
+            Reset filters <Icon name="reset" />
           </TextButton>
         </div>
         <p id="results-count" className={styles.resultsCount} role="status">
           {resultsSummary(matches.length, filters)}
         </p>
-        <div className={styles.grid} id="tour-grid">
-          {matches.map((t) => (
+        <div
+          key={Object.values(filters).join("|")}
+          className={cx(styles.grid, "reveal")}
+          id="tour-grid"
+        >
+          {matches.map((t, i) => (
             <TourCard
               key={t.id}
               tour={t}
+              index={i}
               compared={compared.includes(t.id)}
               onCompareChange={(on) => toggleCompare(t.id, on)}
               onDetails={() => showDetails(t.id)}

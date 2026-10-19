@@ -1,4 +1,5 @@
 import { asset } from "@/lib/utils";
+import { Icon } from "@/components/ui/Icon";
 import styles from "./IndiaCard.module.css";
 
 type IndiaCardProps = {
@@ -25,7 +26,9 @@ export function IndiaCard({
       <span>
         <small>{tagline}</small>
         <strong>{name}</strong>
-        <span>{cta}</span>
+        <span>
+          {cta} <Icon name="arrow" />
+        </span>
       </span>
     </button>
   );

@@ -5,6 +5,7 @@ import { useJourneys } from "@/components/JourneyProvider";
 import { Brand } from "@/components/ui/Brand";
 import { Button } from "@/components/ui/Button";
 import { phone } from "@/data/site";
+import { Icon } from "@/components/ui/Icon";
 import styles from "./Header.module.css";
 
 /** Contact strip and main header with navigation; the menu collapses below 800px. */
@@ -16,9 +17,10 @@ export function Header() {
     <>
       <div className={styles.topline}>
         <span>Kerala at heart. The rest of India within reach.</span>
-        <a
-          href={`tel:${phone.tel}`}
-        >{`Let’s talk travel \u00a0 ${phone.display} ↗`}</a>
+        <a href={`tel:${phone.tel}`}>
+          {`Let’s talk travel \u00a0 ${phone.display} `}
+          <Icon name="arrow" />
+        </a>
       </div>
       <header className={styles.header}>
         <Brand logo href="#" aria-label="Canty Tours home" />

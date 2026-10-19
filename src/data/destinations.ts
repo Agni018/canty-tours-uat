@@ -38,27 +38,27 @@ export const indiaHighlights = [
   {
     destination: "Rajasthan",
     tagline: "PALACES & DESERT STORIES",
-    cta: "Explore the royal route ↗",
+    cta: "Explore the royal route",
     image: "rajasthan.jpg",
     alt: "Jaipur’s Hawa Mahal in Rajasthan",
   },
   {
     destination: "Goa",
     tagline: "A LITTLE MORE COAST",
-    cta: "Find your beach escape ↗",
+    cta: "Find your beach escape",
     image: "goa.jpg",
     alt: "Palm trees beside a beach in Goa",
   },
   {
     destination: "Sikkim",
     tagline: "MOUNTAIN-TOWN MOMENTS",
-    cta: "Savour the mountain views ↗",
+    cta: "Savour the mountain views",
     image: "sikkim.jpg",
     alt: "The colourful hillside town of Gangtok, Sikkim",
   },
 ];
 
 export const indiaLinks = [
-  { destination: "Ladakh", label: "Ladakh ↗" },
-  { destination: "Golden Triangle", label: "Delhi, Agra & Jaipur ↗" },
+  { destination: "Ladakh", label: "Ladakh" },
+  { destination: "Golden Triangle", label: "Delhi, Agra & Jaipur" },
 ];

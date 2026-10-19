@@ -3,8 +3,8 @@
 }
 .scope {
   display: flex;
-  gap: 26px;
-  margin-bottom: 23px;
+  gap: 28px;
+  margin-bottom: 24px;
   border-bottom: 1px solid #d4dbcf;
 }
 .scopeButton {
@@ -13,39 +13,46 @@
   padding: 0 0 12px;
   background: transparent;
   color: var(--muted);
-  font-size: 12px;
+  font-size: var(--text-sm);
   font-weight: 600;
+  transition:
+    color var(--dur-base) var(--ease-out),
+    border-color var(--dur-base) var(--ease-out);
+}
+.scopeButton:hover {
+  color: var(--ink);
 }
 .scopeButton.active {
   border-bottom-color: var(--ink);
   color: var(--ink);
 }
-.scopeButton span {
-  margin-left: 8px;
-}
 .filterRow {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 15px;
+  gap: 16px;
 }
 .chips {
   display: flex;
-  gap: 9px;
+  gap: 8px;
   flex-wrap: wrap;
 }
 .resultsCount {
-  font-size: 10px;
-  margin: 20px 0 14px;
+  font-size: var(--text-xs);
+  margin: 20px 0 16px;
 }
 .grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 25px;
+  gap: 24px;
 }
 .empty {
   text-align: center;
-  padding: 65px 10px;
+  padding: 64px 10px;
+}
+.empty h3 {
+  font: 400 var(--text-h3) / 1.2 var(--serif);
+  letter-spacing: var(--tracking-heading);
 }
 .empty p {
   margin: 16px 0 24px;
@@ -60,7 +67,7 @@
 
 @media (max-width: 1100px) {
   .grid {
-    gap: 17px;
+    gap: 18px;
   }
   .filterRow {
     align-items: start;
@@ -73,17 +80,11 @@
   .grid {
     grid-template-columns: 1fr 1fr;
   }
-  .chips {
-    gap: 7px;
-  }
 }
 @media (max-width: 540px) {
   .scope {
-    gap: 25px;
+    gap: 24px;
     margin-bottom: 20px;
-  }
-  .scopeButton {
-    font-size: 11px;
   }
   .filterRow {
     display: block;
@@ -93,6 +94,6 @@
   }
   .grid {
     grid-template-columns: 1fr;
-    gap: 21px;
+    gap: 20px;
   }
 }

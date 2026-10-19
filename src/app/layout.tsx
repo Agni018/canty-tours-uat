@@ -1,18 +1,20 @@
 import type { Metadata, Viewport } from "next";
-import { DM_Sans, Libre_Caslon_Display } from "next/font/google";
+import { Fraunces, Inter } from "next/font/google";
 import type { ReactNode } from "react";
 import "./globals.css";
 
 // Self-hosted at build time by next/font (no request to Google from the visitor's browser).
-const sans = DM_Sans({
+// Both are variable fonts; "opsz" picks the optical size automatically for each font size.
+const serif = Fraunces({
   subsets: ["latin", "latin-ext"],
-  weight: ["400", "500", "600", "700"],
-  variable: "--font-sans",
-});
-const serif = Libre_Caslon_Display({
-  subsets: ["latin", "latin-ext"],
-  weight: "400",
+  style: ["normal", "italic"],
+  axes: ["opsz"],
   variable: "--font-serif",
+});
+const sans = Inter({
+  subsets: ["latin", "latin-ext"],
+  axes: ["opsz"],
+  variable: "--font-sans",
 });
 
 export const metadata: Metadata = {

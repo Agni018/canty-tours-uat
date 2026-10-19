@@ -1,3 +1,10 @@
+/* Slides up just after the hero copy. */
+@keyframes finderIn {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+}
 .finder {
   position: relative;
   margin-top: -32px;
@@ -5,10 +12,11 @@
   grid-template-columns: 1fr 1.15fr 1fr auto;
   align-items: center;
   background: #fff;
-  padding: 22px 24px;
-  border-radius: 7px;
-  box-shadow: 0 12px 35px #1d3e3610;
+  padding: 20px 24px;
+  border-radius: 12px;
+  box-shadow: 0 18px 40px -20px rgb(29 62 54 / 0.3);
   z-index: 2;
+  animation: finderIn var(--dur-reveal) var(--ease-out) 500ms backwards;
 }
 .finder label {
   padding: 0 24px;
@@ -19,36 +27,36 @@
 }
 .finder label > span {
   display: block;
-  letter-spacing: 1.5px;
-  font-size: 9px;
-  color: #758076;
-  font-weight: 700;
-  margin-bottom: 5px;
+  font-size: var(--text-label);
+  font-weight: 600;
+  letter-spacing: var(--tracking-label);
+  color: var(--muted);
+  margin-bottom: 4px;
 }
 .finder select {
   border: none;
   background: transparent;
   color: var(--ink);
   width: 100%;
-  font-size: 13px;
+  font-size: var(--text-base);
   padding: 4px 20px 4px 0;
+  cursor: pointer;
 }
 .finder .submit {
-  margin-left: 22px;
+  margin-left: 20px;
   white-space: nowrap;
 }
 
 @media (max-width: 1100px) {
   .finder {
-    padding: 20px 15px;
+    padding: 18px 16px;
   }
   .finder label {
     padding: 0 14px;
   }
   .finder .submit {
-    padding: 15px;
+    padding: 15px 18px;
     margin-left: 12px;
-    font-size: 11px;
   }
 }
 @media (max-width: 800px) {
@@ -64,24 +72,17 @@
   }
   .finder .submit {
     margin: 0;
-    font-size: 12px;
   }
 }
 @media (max-width: 540px) {
+  /* One field per row so the 16px option text isn't cut off. */
   .finder {
-    padding: 22px 18px;
-    gap: 19px 15px;
-  }
-  .finder select {
-    font-size: 11px;
-  }
-  .finder label > span {
-    font-size: 7px;
-    letter-spacing: 1px;
+    grid-template-columns: 1fr;
+    padding: 20px 18px;
+    gap: 16px;
   }
   .finder .submit {
-    padding: 13px 12px;
-    font-size: 10px;
+    padding: 14px;
     gap: 10px;
   }
 }

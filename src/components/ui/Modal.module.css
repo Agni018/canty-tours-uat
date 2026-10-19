@@ -1,55 +1,90 @@
+/* Dialogs fade and rise in, then leave faster than they arrived.
+   allow-discrete keeps a closing dialog visible until its exit transition ends. */
 .modal {
   border: none;
   background: var(--cream);
   color: var(--ink);
-  border-radius: 12px;
-  padding: 38px;
+  border-radius: 14px;
+  padding: 40px;
   width: min(750px, calc(100% - 32px));
   max-height: 90dvh;
   overflow: auto;
-  box-shadow: 0 15px 90px #0004;
+  box-shadow: 0 30px 80px -24px rgb(16 43 38 / 0.5);
+  font-size: var(--text-base);
+  opacity: 0;
+  transform: translateY(16px) scale(0.98);
+  transition:
+    opacity var(--dur-base) var(--ease-in),
+    transform var(--dur-base) var(--ease-in),
+    overlay var(--dur-base) allow-discrete,
+    display var(--dur-base) allow-discrete;
+}
+.modal[open] {
+  opacity: 1;
+  transform: none;
+  transition-duration: var(--dur-slow);
+  transition-timing-function: var(--ease-out);
+}
+@starting-style {
+  .modal[open] {
+    opacity: 0;
+    transform: translateY(16px) scale(0.98);
+  }
 }
 .modal::backdrop {
-  background: #102b26b8;
+  background-color: rgb(16 43 38 / 0);
   backdrop-filter: blur(3px);
+  transition:
+    background-color var(--dur-base) var(--ease-in),
+    overlay var(--dur-base) allow-discrete,
+    display var(--dur-base) allow-discrete;
+}
+.modal[open]::backdrop {
+  background-color: rgb(16 43 38 / 0.72);
+  transition-duration: var(--dur-slow);
+}
+@starting-style {
+  .modal[open]::backdrop {
+    background-color: rgb(16 43 38 / 0);
+  }
 }
 .wide {
   width: min(1050px, calc(100% - 24px));
 }
 .close {
   position: absolute;
-  right: 15px;
-  top: 15px;
+  right: 16px;
+  top: 16px;
   background: #fff;
   border: 1px solid #d8ded3;
   border-radius: 50%;
-  height: 34px;
-  width: 34px;
+  height: 40px;
+  width: 40px;
   display: grid;
   place-items: center;
-  font-size: 24px;
+  font-size: 1.5rem;
   z-index: 1;
   line-height: 1;
+  transition:
+    transform var(--dur-base) var(--ease-out),
+    border-color var(--dur-fast) var(--ease-out);
+}
+.close:hover {
+  transform: rotate(90deg);
+  border-color: var(--ink);
 }
 .modal h2 {
-  font-size: 42px;
-  margin: 5px 0 15px;
+  margin: 6px 0 16px;
 }
 .modal h3 {
-  margin: 25px 0 12px;
-}
-.modal p {
-  font-size: 13px;
+  margin: 28px 0 12px;
 }
 
 @media (max-width: 540px) {
   .modal {
     padding: 24px;
   }
-  .modal h2 {
-    font-size: 34px;
-  }
   .wide {
-    padding-top: 55px;
+    padding-top: 64px;
   }
 }

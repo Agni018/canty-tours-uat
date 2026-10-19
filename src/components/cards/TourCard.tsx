@@ -1,10 +1,14 @@
+import type { CSSProperties } from "react";
 import type { Tour } from "@/data/tours";
 import { regionLabel } from "@/lib/journeys";
 import { asset } from "@/lib/utils";
+import { Icon } from "@/components/ui/Icon";
 import styles from "./TourCard.module.css";
 
 type TourCardProps = {
   tour: Tour;
+  /** Position in the grid; staggers the entrance animation. */
+  index: number;
   compared: boolean;
   onCompareChange: (on: boolean) => void;
   onDetails: () => void;
@@ -13,12 +17,13 @@ type TourCardProps = {
 /** Journey card in the grid: photo, summary, "View journey" and a compare checkbox. */
 export function TourCard({
   tour: t,
+  index,
   compared,
   onCompareChange,
   onDetails,
 }: TourCardProps) {
   return (
-    <article className={styles.card}>
+    <article className={styles.card} style={{ "--i": index } as CSSProperties}>
       <div className={styles.photo}>
         <img src={asset(`${t.image}.jpg`)} alt={t.alt} loading="lazy" />
         <span className={styles.tag}>{t.style}</span>
@@ -35,7 +40,7 @@ export function TourCard({
             Made for you<small>Price on request</small>
           </span>
           <button type="button" className={styles.details} onClick={onDetails}>
-            View journey ↗
+            View journey <Icon name="arrow" />
           </button>
         </div>
         <label className={styles.compare}>

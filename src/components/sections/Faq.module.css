@@ -4,17 +4,21 @@
   gap: 100px;
 }
 .faq > div > p:not(.eyebrow) {
-  margin-top: 25px;
-  font-size: 12px;
-  line-height: 2;
+  margin-top: 24px;
+  font-size: var(--text-base);
+  line-height: 1.9;
 }
 .faq > div > p a {
   text-decoration: underline;
   text-underline-offset: 4px;
+  transition: color var(--dur-fast) var(--ease-out);
+}
+.faq > div > p a:hover {
+  color: var(--orange);
 }
 .list details {
   border-bottom: 1px solid var(--line);
-  padding: 20px 0;
+  padding: 18px 0;
 }
 .list details:first-child {
   padding-top: 0;
@@ -22,27 +26,43 @@
 .list summary {
   list-style: none;
   cursor: pointer;
-  font-size: 13px;
+  font-size: var(--text-base);
   font-weight: 500;
   display: flex;
   justify-content: space-between;
-  gap: 15px;
+  align-items: center;
+  gap: 16px;
+  transition: color var(--dur-fast) var(--ease-out);
+}
+.list summary:hover {
+  color: var(--orange);
 }
 .list summary::-webkit-details-marker {
   display: none;
 }
 .list summary span {
-  font-size: 19px;
-  font-weight: 400;
-  line-height: 1.1;
+  font-size: 1.375rem;
+  font-weight: 300;
+  line-height: 1;
+  transition: transform var(--dur-base) var(--ease-out);
 }
 .list details[open] summary span {
   transform: rotate(45deg);
 }
+/* Answers slide open where the browser supports animating to height: auto. */
+.list details::details-content {
+  block-size: 0;
+  overflow: hidden;
+  transition:
+    block-size var(--dur-slow) var(--ease-out),
+    content-visibility var(--dur-slow) allow-discrete;
+}
+.list details[open]::details-content {
+  block-size: auto;
+}
 .list details p {
-  font-size: 12px;
-  padding: 15px 25px 3px 0;
-  line-height: 1.8;
+  font-size: var(--text-base);
+  padding: 14px 28px 4px 0;
 }
 .list a {
   text-decoration: underline;
@@ -56,13 +76,7 @@
 }
 @media (max-width: 800px) {
   .faq {
-    gap: 30px;
-  }
-  .faq h2 {
-    font-size: 42px;
-  }
-  .list summary {
-    font-size: 12px;
+    gap: 32px;
   }
 }
 @media (max-width: 540px) {
@@ -72,8 +86,5 @@
   }
   .faq h2 br {
     display: none;
-  }
-  .faq > div > p:not(.eyebrow) {
-    font-size: 11px;
   }
 }

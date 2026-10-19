@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { cx } from "@/lib/utils";
 import styles from "./SectionHeading.module.css";
 
 type SectionHeadingProps = {
@@ -16,7 +17,7 @@ export function SectionHeading({
   intro,
 }: SectionHeadingProps) {
   return (
-    <div className={styles.heading}>
+    <div className={cx(styles.heading, "reveal")}>
       <div>
         <p className="eyebrow" id={eyebrowId}>
           {eyebrow}

@@ -3,6 +3,7 @@
 import { useJourneys } from "@/components/JourneyProvider";
 import { Button } from "@/components/ui/Button";
 import { asset, cx } from "@/lib/utils";
+import { Icon } from "@/components/ui/Icon";
 import styles from "./Hero.module.css";
 
 export function Hero() {
@@ -41,7 +42,7 @@ export function Hero() {
           Explore Kerala journeys
         </Button>
         <a className={styles.secondary} href="#beyond-kerala">
-          Looking for somewhere else in India? ↗
+          Looking for somewhere else in India? <Icon name="arrow" />
         </a>
       </div>
       <div className={styles.location}>

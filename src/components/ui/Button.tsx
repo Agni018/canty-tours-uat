@@ -4,12 +4,13 @@ import type {
   ReactNode,
 } from "react";
 import { cx } from "@/lib/utils";
+import { Icon } from "./Icon";
 import styles from "./Button.module.css";
 
 type Common = {
   variant?: "dark" | "orange";
   small?: boolean;
-  /** Adds the large ↗ arrow after the label. */
+  /** Adds the ↗ arrow after the label. */
   arrow?: boolean;
   className?: string;
   children: ReactNode;
@@ -40,7 +41,7 @@ export function Button({
       {arrow && (
         <>
           {" "}
-          <span>↗</span>
+          <Icon name="arrow" />
         </>
       )}
     </>

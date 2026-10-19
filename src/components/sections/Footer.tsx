@@ -6,6 +6,7 @@ import { Brand } from "@/components/ui/Brand";
 import { TextButton } from "@/components/ui/TextButton";
 import { phone, whatsappLink } from "@/data/site";
 import { cx } from "@/lib/utils";
+import { Icon } from "@/components/ui/Icon";
 import styles from "./Footer.module.css";
 
 export function Footer() {
@@ -27,9 +28,12 @@ export function Footer() {
           <span className={cx("eyebrow", styles.eyebrow)}>
             LET’S GO SOMEWHERE
           </span>
-          <a href={`tel:${phone.tel}`}>{`${phone.display} ↗`}</a>
+          <a href={`tel:${phone.tel}`}>
+            {`${phone.display} `}
+            <Icon name="arrow" />
+          </a>
           <a href={whatsappLink()} target="_blank" rel="noopener">
-            Chat on WhatsApp ↗
+            Chat on WhatsApp <Icon name="arrow" />
           </a>
         </div>
         <div className={styles.nav}>

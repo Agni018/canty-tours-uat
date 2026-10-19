@@ -5,6 +5,7 @@ import { useJourneys } from "@/components/JourneyProvider";
 import { Button } from "@/components/ui/Button";
 import { Modal } from "@/components/ui/Modal";
 import { tours, type Tour } from "@/data/tours";
+import { Icon } from "@/components/ui/Icon";
 import styles from "./CompareDialog.module.css";
 
 /** Side-by-side table of the selected journeys. */
@@ -24,7 +25,7 @@ export function CompareDialog() {
       "Next step",
       (t) => (
         <Button className={styles.planButton} onClick={() => planTour(t.id)}>
-          Plan this trip ↗
+          Plan this trip <Icon name="arrow" />
         </Button>
       ),
     ],

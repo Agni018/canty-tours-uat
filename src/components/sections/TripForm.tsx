@@ -19,7 +19,8 @@ import {
   tripLengthFor,
   type Enquiry,
 } from "@/lib/journeys";
-import { scrollToSection } from "@/lib/utils";
+import { cx, scrollToSection } from "@/lib/utils";
+import { Icon } from "@/components/ui/Icon";
 import styles from "./TripForm.module.css";
 
 /** Today as YYYY-MM-DD in the visitor's time zone, for the date input's min. */
@@ -82,7 +83,11 @@ export function TripForm() {
   }
 
   return (
-    <form id="trip-form" className={styles.form} onSubmit={handleSubmit}>
+    <form
+      id="trip-form"
+      className={cx(styles.form, "reveal")}
+      onSubmit={handleSubmit}
+    >
       <h3>Let’s make it yours.</h3>
       <p>Share a few details to start the conversation.</p>
       <div className={styles.grid}>
@@ -161,7 +166,7 @@ export function TripForm() {
               rel="noopener noreferrer"
               style={{ textDecoration: "underline" }}
             >
-              open your prepared message here ↗
+              open your prepared message here <Icon name="arrow" />
             </a>
           </>
         )}

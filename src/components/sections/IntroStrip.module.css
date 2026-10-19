@@ -2,42 +2,36 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 43px;
-  padding: 32px 0 3px;
-  color: #5c6c62;
-  font-size: 11px;
+  gap: 40px;
+  padding: 32px 0 4px;
+  color: var(--muted);
+  font-size: var(--text-sm);
 }
 .spark {
-  color: #a88255;
-  font-size: 18px;
+  color: var(--accent-dark);
+  font-size: 1.125rem;
 }
 
 @media (max-width: 1100px) {
   .strip {
-    gap: 25px;
+    gap: 24px;
   }
 }
 @media (max-width: 800px) {
   .strip {
-    font-size: 10px;
-    gap: 18px;
+    gap: 8px 18px;
     flex-wrap: wrap;
   }
 }
 @media (max-width: 540px) {
+  /* Three short lines, no separators. */
   .strip {
+    flex-direction: column;
     padding-top: 24px;
-    gap: 9px 13px;
-    font-size: 8px;
+    gap: 4px;
+    font-size: var(--text-xs);
   }
   .strip .spark {
-    font-size: 10px;
-  }
-  .strip > span:last-child {
-    flex-basis: 100%;
-    text-align: center;
-  }
-  .strip > .spark:nth-last-child(2) {
     display: none;
   }
 }

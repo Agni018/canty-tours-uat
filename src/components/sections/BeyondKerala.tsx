@@ -6,6 +6,7 @@ import { SectionHeading } from "@/components/ui/SectionHeading";
 import { TextButton } from "@/components/ui/TextButton";
 import { indiaHighlights, indiaLinks } from "@/data/destinations";
 import { cx } from "@/lib/utils";
+import { Icon } from "@/components/ui/Icon";
 import styles from "./BeyondKerala.module.css";
 
 /** Destinations outside Kerala; each one filters the journey grid. */
@@ -26,7 +27,7 @@ export function BeyondKerala() {
             </>
           }
         />
-        <div className={styles.grid}>
+        <div className={cx(styles.grid, "reveal")}>
           {indiaHighlights.map((d) => (
             <IndiaCard
               key={d.destination}
@@ -36,18 +37,18 @@ export function BeyondKerala() {
             />
           ))}
         </div>
-        <div className={styles.links}>
+        <div className={cx(styles.links, "reveal")}>
           <span>Keep exploring</span>
           {indiaLinks.map((l) => (
             <TextButton
               key={l.destination}
               onClick={() => showDestination(l.destination)}
             >
-              {l.label}
+              {l.label} <Icon name="arrow" />
             </TextButton>
           ))}
           <TextButton onClick={() => showRegion("all")}>
-            View all India journeys ↗
+            View all India journeys <Icon name="arrow" />
           </TextButton>
         </div>
       </div>

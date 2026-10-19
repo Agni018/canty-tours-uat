@@ -1,4 +1,5 @@
 import { asset, cx } from "@/lib/utils";
+import { Icon } from "@/components/ui/Icon";
 import styles from "./Approach.module.css";
 
 const promises = [
@@ -19,7 +20,7 @@ const promises = [
 export function Approach() {
   return (
     <section id="our-approach" className={cx("section wrap", styles.approach)}>
-      <div className={styles.photo}>
+      <div className={cx(styles.photo, "reveal")}>
         <img
           src={asset("wayanad.jpg")}
           alt="Lush green hill country in Wayanad, Kerala"
@@ -32,7 +33,7 @@ export function Approach() {
           <span>THE CANTY WAY</span>
         </div>
       </div>
-      <div className={styles.copy}>
+      <div className={cx(styles.copy, "reveal")}>
         <p className={cx("eyebrow", styles.eyebrow)}>
           MAKE SPACE FOR THE MOMENTS BETWEEN
         </p>
@@ -60,7 +61,7 @@ export function Approach() {
           </div>
         ))}
         <a href="#plan" className={styles.link}>
-          Let’s shape your Kerala holiday ↗
+          Let’s shape your Kerala holiday <Icon name="arrow" />
         </a>
       </div>
     </section>

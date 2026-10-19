@@ -2,8 +2,12 @@
   border: none;
   padding: 6px 0;
   background: transparent;
-  font-size: 11px;
+  font-size: var(--text-sm);
+  text-decoration: underline;
+  text-decoration-color: transparent;
+  text-underline-offset: 4px;
+  transition: text-decoration-color var(--dur-fast) var(--ease-out);
 }
 .textButton:hover {
-  text-decoration: underline;
+  text-decoration-color: currentColor;
 }

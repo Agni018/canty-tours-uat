@@ -4,6 +4,8 @@ import { DestinationCard } from "@/components/cards/DestinationCard";
 import { useJourneys } from "@/components/JourneyProvider";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { keralaHighlights, morePlaces } from "@/data/destinations";
+import { cx } from "@/lib/utils";
+import { Icon } from "@/components/ui/Icon";
 import styles from "./Destinations.module.css";
 
 /** Kerala destination cards; each one filters the journey grid to that place. */
@@ -29,7 +31,7 @@ export function Destinations() {
           </>
         }
       />
-      <div className={styles.grid}>
+      <div className={cx(styles.grid, "reveal")}>
         {keralaHighlights.map((d) => (
           <DestinationCard
             key={d.destination}
@@ -38,7 +40,7 @@ export function Destinations() {
           />
         ))}
       </div>
-      <div className={styles.more}>
+      <div className={cx(styles.more, "reveal")}>
         <span>A little further into Kerala</span>
         {morePlaces.map((p) => (
           <button
@@ -46,7 +48,7 @@ export function Destinations() {
             key={p.destination}
             onClick={() => showDestination(p.destination)}
           >
-            {`${p.destination} ↗`}
+            {p.destination} <Icon name="arrow" />
             <small>{p.details}</small>
           </button>
         ))}
