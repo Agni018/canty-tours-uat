@@ -29,8 +29,10 @@ Earlier India-wide layout references:
 Original layout and copy; no competitor branding or proprietary descriptions copied. Earlier references checked 11 October 2026.
 
 ## Photos
-Downloaded from Unsplash, re-sized for the site:
-- New Kerala destination photos: [Munnar, Varkala and Wayanad credits](assets/kerala-photo-credits.md).
+Downloaded from Unsplash, re-sized for the site, used under the [Unsplash License](https://unsplash.com/license):
+- Munnar, Vivek Kumar: https://unsplash.com/photos/tea-gardens-on-munnar-hills-JS_ohjocm00
+- Varkala, Nandu Vasudevan: https://unsplash.com/photos/BU0lMokk7tA
+- Wayanad, Niranjan V S: https://unsplash.com/photos/mountains-covered-in-lush-green-vegetation-stand-tall-rTiBFR2c99c
 - Kerala: https://images.unsplash.com/photo-1602216056096-3b40cc0c9944
 - Rajasthan: https://unsplash.com/photos/LgQoL6eOdHs
 - Ladakh, Vivek: https://unsplash.com/photos/MEaPZmSKyws
