@@ -10,7 +10,7 @@ const server = http.createServer(async (request, response) => {
     const pathname = decodeURIComponent(new URL(request.url, 'http://localhost').pathname);
     const relative = pathname === '/' ? 'index.html' : pathname.replace(/^\/+/, '');
     const allowed = ['index.html', 'styles.css', 'app.js'].includes(relative)
-      || /^assets\/[\w-]+\.(jpg|svg|md)$/.test(relative);
+      || /^assets\/(?:destinations\/)?[\w-]+\.(jpg|svg|md)$/.test(relative);
     if (!allowed) {
       response.writeHead(404);
       response.end('Not found');
