@@ -58,8 +58,8 @@
   position: absolute;
   right: 16px;
   top: 16px;
-  background: #fff;
-  border: 1px solid #d8ded3;
+  background: var(--surface);
+  border: 1px solid var(--line);
   border-radius: 50%;
   height: 40px;
   width: 40px;

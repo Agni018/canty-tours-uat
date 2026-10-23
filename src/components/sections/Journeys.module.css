@@ -1,11 +1,11 @@
 .section {
-  background: #f0f1e9;
+  background: var(--sand);
 }
 .scope {
   display: flex;
   gap: 28px;
   margin-bottom: 24px;
-  border-bottom: 1px solid #d4dbcf;
+  border-bottom: 1px solid var(--line);
 }
 .scopeButton {
   border: 0;

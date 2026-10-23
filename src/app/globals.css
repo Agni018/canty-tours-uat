@@ -1,16 +1,31 @@
 /* Design tokens, element defaults and the few utility classes shared across sections.
    Component styles live next to each component in *.module.css and use only these tokens. */
 :root {
-  /* Colour */
-  --ink: #193e36;
-  --cream: #faf8f3;
-  --muted: #56645d; /* secondary text; ≥4.5:1 on cream, white and the journeys tint */
-  --orange: #bb542b; /* white text on it is 4.8:1 */
-  --line: #dcded5;
-  --on-dark: #f4f1e8; /* text on --ink and on photos */
-  --on-dark-muted: #c3d1c8;
-  --accent-dark: #94613f; /* italic accents and numbers on light backgrounds; 4.9:1 */
-  --accent-light: #ebd2a8; /* italic accents on dark backgrounds */
+  /* Colour: "Kerala, vivid but grounded". Roughly 60% warm neutrals (coconut cream), 30% palm
+     green (the brand), 10% saffron and marigold, kept for actions and highlights. Green and
+     saffron sit almost opposite on the colour wheel, so the main actions stand out against the
+     green photos. Every text pairing listed here is at least 4.5:1 (WCAG AA). Tints come from
+     these with color-mix() rather than new hex values. */
+  /* Neutrals */
+  --cream: #fbf7ef; /* page background */
+  --surface: #ffffff; /* cards, finder, dialogs, lists, inputs */
+  --sand: #f6f0e6; /* alternate section bands */
+  --line: #e6ddcc; /* dividers and card edges (decorative) */
+  --control: #7f8c85; /* edges of inputs and chips: 3:1 on white and cream (WCAG 1.4.11) */
+  /* Palm green */
+  --ink: #0b3b2e; /* text and dark sections; 11.7:1 on cream */
+  --ink-hover: #145240; /* hover on dark buttons; white text 9:1 */
+  --green-soft: #e3f2ea; /* light green for hovered and selected backgrounds */
+  --muted: #4e5f57; /* secondary text; at least 5.8:1 on cream, sand and white */
+  /* Saffron and marigold */
+  --orange: #c2410c; /* saffron, the main action: white text 5.2:1, on cream and sand 4.5:1+ */
+  --orange-hover: #a3360a; /* white text 6.8:1 */
+  --marigold: #f5a524; /* highlights and focus rings on dark backgrounds and photos */
+  --accent-dark: #8f5410; /* accents and numbers on light backgrounds; 5.4:1 on sand */
+  --accent-light: #f7c873; /* accents on dark backgrounds and photos; 8:1 on ink */
+  /* Text on dark */
+  --on-dark: #f7f2e7; /* text on --ink and on photos; 11:1 */
+  --on-dark-muted: #bfd3c7; /* 8:1 on ink */
 
   /* Typefaces: --font-serif / --font-sans are set by next/font in app/layout.tsx. */
   --serif: var(--font-serif), Georgia, serif;
@@ -55,7 +70,8 @@
 }
 html {
   scroll-behavior: smooth;
-  scroll-padding-top: 90px;
+  /* Clears the fixed header when jumping to a section. */
+  scroll-padding-top: 104px;
   /* Lets height: auto animate (FAQ answers); ignored by browsers without support. */
   interpolate-size: allow-keywords;
 }
@@ -85,7 +101,7 @@ button:disabled {
   cursor: not-allowed;
 }
 :focus-visible {
-  outline: 3px solid #ed9c63;
+  outline: 3px solid var(--marigold);
   outline-offset: 4px;
 }
 img {
@@ -159,12 +175,16 @@ p {
   position: fixed;
   left: 10px;
   top: -100px;
-  z-index: 20;
+  z-index: 30;
   background: white;
   padding: 12px;
 }
 .skip:focus {
   top: 10px;
+}
+/* The skip link's target: focused by script, so no ring. */
+main:focus {
+  outline: none;
 }
 
 /* Shared motion */

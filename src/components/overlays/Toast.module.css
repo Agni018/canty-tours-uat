@@ -6,7 +6,7 @@
   transform: translate(-50%, 12px);
   opacity: 0;
   visibility: hidden;
-  background: #17382e;
+  background: var(--ink);
   color: white;
   padding: 12px 20px;
   border-radius: 8px;

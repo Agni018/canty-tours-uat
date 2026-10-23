@@ -5,6 +5,7 @@
   gap: 10px;
   font: 400 39px/0.9 var(--serif);
   letter-spacing: -1px;
+  white-space: nowrap;
 }
 .brand svg {
   width: 43px;
