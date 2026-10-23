@@ -2,9 +2,10 @@
   background: var(--cream);
   color: var(--ink);
   padding: 36px;
-  border-radius: 14px;
+  border-radius: 20px;
   box-shadow: 0 30px 60px -30px rgb(0 0 0 / 0.45);
 }
+.form > h2,
 .form > h3 {
   font: 400 var(--text-h3) / 1.15 var(--serif);
   letter-spacing: var(--tracking-heading);
@@ -13,11 +14,21 @@
   font-size: var(--text-sm);
   margin-top: 6px;
 }
+/* The journey being planned, under the heading on a journey's page. */
+.form > .journey {
+  color: var(--ink);
+  font-weight: 500;
+}
 .grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 18px 16px;
   margin-top: 26px;
+}
+/* The enquiry card beside a journey: short fields two to a row, so the card fits on screen. */
+.grid.compact {
+  gap: 14px 12px;
+  margin-top: 18px;
 }
 .submit {
   width: 100%;
@@ -27,6 +38,17 @@
   font-size: var(--text-xs);
   line-height: 1.6;
   margin-top: 14px;
+}
+.form .quick {
+  font-size: var(--text-sm);
+  margin-top: 12px;
+}
+.form .quick a,
+.form .status a {
+  color: var(--ink);
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 3px;
 }
 .form .status {
   font-size: var(--text-sm);

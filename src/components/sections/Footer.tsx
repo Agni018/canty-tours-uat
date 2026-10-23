@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useJourneys } from "@/components/JourneyProvider";
 import { Brand } from "@/components/ui/Brand";
@@ -18,7 +19,7 @@ export function Footer() {
   return (
     <footer className={styles.footer}>
       <div className={cx("wrap", styles.main)}>
-        <Brand href="#" className={styles.brand} />
+        <Brand href="/" className={styles.brand} />
         <p>
           Kerala at heart.
           <br />
@@ -37,12 +38,13 @@ export function Footer() {
           </a>
         </div>
         <div className={styles.nav}>
-          <a href="#destinations">Discover Kerala</a>
-          <a href="#journeys" onClick={() => showRegion("Kerala")}>
+          <Link href="/#destinations">Discover Kerala</Link>
+          <Link href="/#journeys" onClick={() => showRegion("Kerala")}>
             Kerala journey ideas
-          </a>
-          <a href="#beyond-kerala">Beyond Kerala</a>
-          <a href="#plan">Plan your trip</a>
+          </Link>
+          <Link href="/#beyond-kerala">Beyond Kerala</Link>
+          <Link href="/#faq">Good to know</Link>
+          <Link href="/#plan">Plan your trip</Link>
         </div>
       </div>
       <div className={cx("wrap", styles.bottom)}>

@@ -10,7 +10,7 @@ type FieldProps = {
   children: ReactNode;
 };
 
-/** Labelled form control (input, Select or textarea) with the boxed form style. */
+/** Labelled form control (input or textarea) with the boxed form style. Dropdowns use Dropdown boxed. */
 export function Field({ label, full, htmlFor, children }: FieldProps) {
   const className = cx(styles.field, full && styles.full);
   if (htmlFor) {

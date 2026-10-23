@@ -3,6 +3,7 @@
 import {
   createContext,
   useContext,
+  useEffect,
   useRef,
   useState,
   type ReactNode,
@@ -12,12 +13,14 @@ import { tours } from "@/data/tours";
 import {
   defaultFilters,
   filterTours,
+  filtersFromQuery,
+  filtersToQuery,
   tourVisiting,
   type Filters,
 } from "@/lib/journeys";
 import { scrollToSection } from "@/lib/utils";
 
-/** A request for TripForm to fill in a destination and take focus. */
+/** A request for EnquiryForm to fill in a destination and take focus. */
 export type TripRequest = { destination: string };
 
 const MAX_COMPARE = 3;
@@ -31,11 +34,7 @@ function useJourneyState() {
   });
   // Bumped when the results should be scrolled to and pointed out (see Journeys).
   const [revealCount, setRevealCount] = useState(0);
-  // Journey from a shared #journey=<id> link, waiting for its card to render.
-  const [sharedId, setSharedId] = useState<string | null>(null);
   const [compared, setCompared] = useState<string[]>([]);
-  const [detailId, setDetailId] = useState<string | null>(null);
-  const [connectId, setConnectId] = useState<string | null>(null);
   const [compareOpen, setCompareOpen] = useState(false);
   const [privacyOpen, setPrivacyOpen] = useState(false);
   const [tripRequest, setTripRequest] = useState<TripRequest | null>(null);
@@ -59,6 +58,22 @@ function useJourneyState() {
       return { fields: next, filters: next };
     });
   }
+
+  // The grid's filters live in the address too (?style=Family), so a filtered view can be
+  // shared, reloaded or returned to with Back. Read once on arrival, then kept in step.
+  useEffect(() => {
+    const fromUrl = filtersFromQuery(location.search);
+    if (Object.keys(fromUrl).length) applyFilters(fromUrl);
+  }, []);
+  useEffect(() => {
+    const search = filtersToQuery(filters, location.search);
+    if (search !== location.search)
+      history.replaceState(
+        history.state,
+        "",
+        location.pathname + search + location.hash,
+      );
+  }, [filters]);
 
   return {
     fields,
@@ -89,22 +104,6 @@ function useJourneyState() {
       applyFilters(defaultFilters);
     },
 
-    sharedId,
-    setSharedId,
-    /** Opens the journey named in a #journey=<id> link, widening the filters if it's hidden. */
-    openSharedJourney() {
-      const tour = tours.find((t) => location.hash === `#journey=${t.id}`);
-      if (!tour) return;
-      if (!filterTours(tours, filters).includes(tour)) {
-        const inKerala = filterTours(tours, defaultFilters).includes(tour);
-        applyFilters({
-          ...defaultFilters,
-          region: inKerala ? "Kerala" : "all",
-        });
-      }
-      setSharedId(tour.id);
-    },
-
     compared,
     /** Adds or removes a tour from the comparison; refuses a fourth one. */
     toggleCompare(id: string, on: boolean) {
@@ -118,17 +117,6 @@ function useJourneyState() {
       setCompared([]);
     },
 
-    detailTour: tours.find((t) => t.id === detailId) ?? null,
-    showDetails: setDetailId,
-    /** Moves the open journey dialog to the previous (-1) or next (1) journey in the grid. */
-    stepDetails(step: number) {
-      const index = matches.findIndex((t) => t.id === detailId);
-      if (index < 0 || matches.length < 2) return;
-      setDetailId(matches[(index + step + matches.length) % matches.length].id);
-    },
-    /** "Personalise this journey" contact dialog; opens on top of any open dialog. */
-    connectTour: tours.find((t) => t.id === connectId) ?? null,
-    openConnect: setConnectId,
     compareOpen,
     setCompareOpen,
     privacyOpen,
@@ -149,7 +137,7 @@ const JourneyContext = createContext<ReturnType<typeof useJourneyState> | null>(
   null,
 );
 
-/** Holds the page's shared state: filters, comparison, open dialogs, trip requests and toast. */
+/** Holds the site's shared state: filters, comparison, open dialogs, trip requests and toast. */
 export function JourneyProvider({ children }: { children: ReactNode }) {
   return <JourneyContext value={useJourneyState()}>{children}</JourneyContext>;
 }
