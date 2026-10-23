@@ -38,7 +38,6 @@ src/
   data/                 Content: tours, destinations, dropdown options, contact details
   lib/                  Pure logic (filtering, labels, WhatsApp text) and its tests
 public/assets/          Photos, served as /assets/…
-maintenance/            Stand-alone "coming soon" page; not part of the build
 ```
 
 Each component keeps its styles next to it in a `*.module.css` file (CSS Modules, scoped to that
