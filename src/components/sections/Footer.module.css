@@ -1,5 +1,6 @@
 .footer {
-  background: #e9ede3;
+  background: var(--sand);
+  border-top: 1px solid var(--line);
   padding: 56px 0 24px;
 }
 .main {
@@ -32,7 +33,7 @@
 }
 .bottom {
   padding-top: 20px;
-  border-top: 1px solid #d1d9ca;
+  border-top: 1px solid var(--line);
   display: flex;
   justify-content: space-between;
   align-items: center;

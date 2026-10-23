@@ -6,12 +6,13 @@ import { Button } from "@/components/ui/Button";
 import { Modal } from "@/components/ui/Modal";
 import { tours, type Tour } from "@/data/tours";
 import { durationText } from "@/lib/journeys";
+import { journeyPath } from "@/lib/utils";
 import { Icon } from "@/components/ui/Icon";
 import styles from "./CompareDialog.module.css";
 
 /** Side-by-side table of the selected journeys. */
 export function CompareDialog() {
-  const { compared, compareOpen, setCompareOpen, openConnect } = useJourneys();
+  const { compared, compareOpen, setCompareOpen } = useJourneys();
   const items = tours.filter((t) => compared.includes(t.id));
 
   const rows: [string, (t: Tour) => ReactNode][] = [
@@ -21,12 +22,16 @@ export function CompareDialog() {
     ["Pace", (t) => t.pace],
     ["A good fit for", (t) => t.ideal],
     ["Highlights", (t) => t.highlights],
-    ["Price", () => "Personalised quote"],
     [
       "Next step",
       (t) => (
-        <Button className={styles.planButton} onClick={() => openConnect(t.id)}>
-          Plan this trip <Icon name="arrow" />
+        // Closing first, so the comparison isn't still open on coming back.
+        <Button
+          href={`${journeyPath(t.id)}#enquire`}
+          className={styles.planButton}
+          onClick={() => setCompareOpen(false)}
+        >
+          Plan this journey <Icon name="arrow" />
         </Button>
       ),
     ],
@@ -75,8 +80,8 @@ export function CompareDialog() {
               </table>
             </div>
             <p className="fineprint">
-              Sample routes, not confirmed packages. Your final itinerary and
-              inclusions will be agreed in writing.
+              Sample routes, not confirmed packages. Prices are on request; your
+              final itinerary and inclusions will be agreed in writing.
             </p>
           </>
         )}

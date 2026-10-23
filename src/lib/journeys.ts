@@ -1,9 +1,13 @@
 // Pure journey logic (filtering, labels, message text, phone checks). No React or DOM here,
 // so it is unit-tested in journeys.test.ts.
-import type {
-  DurationFilter,
-  RegionFilter,
-  StyleFilter,
+import {
+  durationOptions,
+  regionOptions,
+  styleOptions,
+  type DurationFilter,
+  type RegionFilter,
+  type SelectOption,
+  type StyleFilter,
 } from "../data/options";
 import { places, placeValue } from "../data/places";
 import type { Tour } from "../data/tours";
@@ -55,6 +59,44 @@ export function filterTours(tours: Tour[], f: Filters): Tour[] {
         (f.duration === "short" ? t.days <= 5 : t.days >= 6)) &&
       matchesDestination(t, f.destination),
   );
+}
+
+const optionValues = (options: SelectOption[]) =>
+  options.map((o) => (typeof o === "string" ? o : o.value));
+const allowed: Record<Exclude<keyof Filters, "destination">, string[]> = {
+  region: optionValues(regionOptions),
+  style: optionValues(styleOptions),
+  duration: optionValues(durationOptions),
+};
+
+/**
+ * Filters named in a page address (?region=North&style=Family), so filtered results can be
+ * shared and survive a reload. Unknown keys and values are ignored: the address is untrusted.
+ */
+export function filtersFromQuery(search: string): Partial<Filters> {
+  const q = new URLSearchParams(search);
+  const found: Partial<Filters> = {};
+  for (const [key, values] of Object.entries(allowed)) {
+    const v = q.get(key);
+    if (v && values.includes(v)) Object.assign(found, { [key]: v });
+  }
+  const destination = q.get("destination")?.trim().slice(0, 60);
+  if (destination) found.destination = destination;
+  return found;
+}
+
+/**
+ * The query string for `f`, keeping any other parameters already in `search` (e.g. campaign
+ * tags). Default values are left out, so the plain page keeps a plain address.
+ */
+export function filtersToQuery(f: Filters, search: string): string {
+  const q = new URLSearchParams(search);
+  for (const key of Object.keys(defaultFilters) as (keyof Filters)[]) {
+    if (f[key] === defaultFilters[key]) q.delete(key);
+    else q.set(key, f[key]);
+  }
+  const query = q.toString();
+  return query ? `?${query}` : "";
 }
 
 /** First tour that visits a destination, used to pick the region for a destination card. */
@@ -142,7 +184,7 @@ export function enquiryMessage(e: Enquiry): string {
   ].join("\n");
 }
 
-/** "Ask on WhatsApp" message for one journey. `link` is the shareable journey URL, or "". */
+/** Quick "ask on WhatsApp" message about one journey. `link` is the page URL, or "". */
 export function journeyMessage(t: Tour, link: string): string {
   return [
     `Hi Canty Tours! I'm interested in the “${t.name}” sample journey (${durationText(t)}).`,
@@ -153,57 +195,55 @@ export function journeyMessage(t: Tour, link: string): string {
   ].join("\n");
 }
 
-export type Contact = { name: string; phone: string; email: string };
+/** The fields of the enquiry form on a journey's page (the journey sets the rest). */
+export type JourneyEnquiry = Pick<
+  Enquiry,
+  "name" | "date" | "occasion" | "travellers" | "budget" | "notes"
+>;
 
-/** Message from the "Personalise this journey" contact dialog. `phone` is already formatted. */
-export function contactMessage(t: Tour, c: Contact, link: string): string {
+/** WhatsApp message from the enquiry form on a journey's page. `link` is the page URL, or "". */
+export function journeyEnquiryMessage(
+  t: Tour,
+  e: JourneyEnquiry,
+  link: string,
+): string {
   return [
-    "Hi Canty Tours! I'd like to personalise this journey.",
-    "",
-    `Journey: ${t.name} (${durationText(t)})`,
+    `Hi Canty Tours! I'd like to plan the “${t.name}” sample journey (${durationText(t)}).`,
     `Route: ${t.route}`,
     ...(link ? [link] : []),
     "",
-    ...(c.name ? [`Name: ${c.name}`] : []),
-    `Phone: ${c.phone}`,
-    ...(c.email ? [`Email: ${c.email}`] : []),
+    `Name: ${e.name}`,
+    `Travel date: ${e.date || "Flexible / to discuss"}`,
+    `Occasion: ${e.occasion || "To discuss"}`,
+    `Travellers: ${e.travellers}`,
+    `Budget per person: ${e.budget}`,
+    ...(e.notes ? [`Other details: ${e.notes}`] : []),
     "",
-    "Please get in touch to plan it with me.",
+    "Please share availability, pricing and inclusions.",
   ].join("\n");
 }
 
-/**
- * The phone number with its country code (e.g. "+91 98765 43210"), or "" if it doesn't look like
- * a phone number. A number typed with its own "+" code is used as typed.
- */
-export function formatPhone(code: string, value: string): string {
-  let digits = value.replace(/\D/g, "");
-  if (value.trim().startsWith("+"))
-    return digits.length >= 8 && digits.length <= 15 ? `+${digits}` : "";
-  if (code === "+91") {
-    if (digits.length === 11 && digits.startsWith("0"))
-      digits = digits.slice(1);
-    if (digits.length === 12 && digits.startsWith("91"))
-      digits = digits.slice(2);
-    return /^[1-9]\d{9}$/.test(digits)
-      ? `+91 ${digits.slice(0, 5)} ${digits.slice(5)}`
-      : "";
-  }
-  if (code === "+1") {
-    if (digits.length === 11 && digits.startsWith("1"))
-      digits = digits.slice(1);
-    return digits.length === 10 ? `+1 ${digits}` : "";
-  }
-  return digits.length >= 4 && code.length - 1 + digits.length <= 15
-    ? `${code} ${digits}`
-    : "";
+/** The highlights as a list: "Waterfalls, Tea country, Periyar" gives three items. */
+export function highlightList(t: Tour): string[] {
+  return t.highlights
+    .split(",")
+    .map((h) => h.trim())
+    .filter(Boolean);
 }
 
-/** Validation message for the phone field, or "" when the number is usable. */
-export function phoneError(code: string, value: string): string {
-  if (!value.trim()) return "Please add your phone number so we can reach you.";
-  if (formatPhone(code, value)) return "";
-  if (code === "+91") return "Please enter your 10-digit mobile number.";
-  if (code === "+1") return "Please enter your 10-digit phone number.";
-  return "Please check your phone number.";
+/**
+ * Up to `count` other journeys to suggest on a journey's page: those in the same region and
+ * sharing a travel style first, then the same region, then a shared style; ties keep list order.
+ */
+export function relatedTours(tours: Tour[], t: Tour, count = 3): Tour[] {
+  const stylesOf = (x: Tour) => [x.style, ...(x.styles ?? [])];
+  const score = (x: Tour) =>
+    (matchesRegion(x, t.region) ? 2 : 0) +
+    (stylesOf(x).some((s) => stylesOf(t).includes(s)) ? 1 : 0);
+  return tours
+    .filter((x) => x.id !== t.id)
+    .map((x, i) => ({ x, i, s: score(x) }))
+    .sort((a, b) => b.s - a.s || a.i - b.i)
+    .slice(0, count)
+    .map(({ x }) => x);
 }

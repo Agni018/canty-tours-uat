@@ -43,6 +43,8 @@ jobs:
         env:
           # e.g. "/canty-tours-uat" when served from <user>.github.io/canty-tours-uat
           BASE_PATH: ${{ steps.pages.outputs.base_path }}
+          # Full public address, for link previews and search data (see app/layout.tsx)
+          SITE_URL: ${{ steps.pages.outputs.base_url }}
 
       - name: Upload site
         if: github.event_name != 'pull_request'

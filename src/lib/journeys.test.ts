@@ -2,16 +2,18 @@ import { describe, expect, it } from "vitest";
 import { places, placeValue } from "../data/places";
 import { tours } from "../data/tours";
 import {
-  contactMessage,
   defaultFilters,
   destinationLabel,
   durationText,
   enquiryMessage,
   filterTours,
-  formatPhone,
+  filtersFromQuery,
+  filtersToQuery,
+  highlightList,
+  journeyEnquiryMessage,
   journeyMessage,
   journeysEyebrow,
-  phoneError,
+  relatedTours,
   resultsSummary,
   type Enquiry,
   type Filters,
@@ -64,6 +66,25 @@ describe("filterTours", () => {
   });
 });
 
+describe("filters in the address", () => {
+  it("reads known filters and ignores anything else", () => {
+    expect(
+      filtersFromQuery("?region=North&style=Family&duration=nope&x=1"),
+    ).toEqual({ region: "North", style: "Family" });
+    expect(filtersFromQuery("?destination=%20Munnar%20")).toEqual({
+      destination: "Munnar",
+    });
+    expect(filtersFromQuery("")).toEqual({});
+  });
+  it("writes only what differs from the default, keeping other parameters", () => {
+    expect(filtersToQuery(defaultFilters, "")).toBe("");
+    expect(
+      filtersToQuery({ ...defaultFilters, style: "Family" }, "?utm_source=wa"),
+    ).toBe("?utm_source=wa&style=Family");
+    expect(filtersToQuery(defaultFilters, "?style=Family")).toBe("");
+  });
+});
+
 describe("labels", () => {
   it("shows place names rather than filter values", () => {
     expect(destinationLabel("Alappuzha")).toBe("Alleppey");
@@ -89,32 +110,21 @@ describe("labels", () => {
   });
 });
 
-describe("formatPhone / phoneError", () => {
-  it("normalises Indian mobile numbers", () => {
-    expect(formatPhone("+91", "98765 43210")).toBe("+91 98765 43210");
-    expect(formatPhone("+91", "098765-43210")).toBe("+91 98765 43210");
-    expect(formatPhone("+91", "91 98765 43210")).toBe("+91 98765 43210");
-    expect(formatPhone("+91", "12345")).toBe("");
-    expect(formatPhone("+91", "0987654321")).toBe("");
+describe("journey pages", () => {
+  it("lists the highlights one by one", () => {
+    expect(highlightList(byId("kerala-waterfalls-hills"))).toEqual([
+      "Waterfalls",
+      "Tea country",
+      "Periyar",
+      "Houseboat",
+    ]);
   });
-  it("handles North American and other codes, and numbers typed with their own +code", () => {
-    expect(formatPhone("+1", "(415) 555-0100")).toBe("+1 4155550100");
-    expect(formatPhone("+971", "50 123 4567")).toBe("+971 501234567");
-    expect(formatPhone("+91", "+44 7700 900123")).toBe("+447700900123");
-    expect(formatPhone("+44", "123")).toBe("");
-  });
-  it("explains what is wrong", () => {
-    expect(phoneError("+91", " ")).toBe(
-      "Please add your phone number so we can reach you.",
-    );
-    expect(phoneError("+91", "123")).toBe(
-      "Please enter your 10-digit mobile number.",
-    );
-    expect(phoneError("+1", "123")).toBe(
-      "Please enter your 10-digit phone number.",
-    );
-    expect(phoneError("+44", "12")).toBe("Please check your phone number.");
-    expect(phoneError("+91", "9876543210")).toBe("");
+  it("suggests other journeys from the same region, never the journey itself", () => {
+    const t = byId("kerala-houseboat");
+    const related = relatedTours(tours, t);
+    expect(related).toHaveLength(3);
+    expect(related.map((r) => r.id)).not.toContain(t.id);
+    expect(related.every((r) => r.region === "Kerala")).toBe(true);
   });
 });
 
@@ -124,37 +134,46 @@ describe("WhatsApp messages", () => {
     expect(
       journeyMessage(
         houseboat,
-        "https://example.com/#journey=kerala-houseboat",
+        "https://example.com/journeys/kerala-houseboat/",
       ),
     ).toBe(
       [
         "Hi Canty Tours! I'm interested in the “An Overnight on Alleppey's Waterways” sample journey (2 days / 1 night).",
         "Route: Kochi → Alappuzha → Kochi",
-        "https://example.com/#journey=kerala-houseboat",
+        "https://example.com/journeys/kerala-houseboat/",
         "",
         "Please share availability, pricing and inclusions.",
       ].join("\n"),
     );
     expect(journeyMessage(houseboat, "")).not.toContain("https://");
   });
-  it("sends contact details, leaving out empty optional fields", () => {
+  it("builds the enquiry from a journey's page", () => {
     expect(
-      contactMessage(
+      journeyEnquiryMessage(
         houseboat,
-        { name: "Asha", phone: "+91 98765 43210", email: "" },
-        "",
+        {
+          name: "Asha",
+          date: "2026-12-20",
+          occasion: "Honeymoon / couple",
+          travellers: "2 travellers",
+          budget: "Let’s discuss",
+          notes: "",
+        },
+        "https://example.com/journeys/kerala-houseboat/",
       ),
     ).toBe(
       [
-        "Hi Canty Tours! I'd like to personalise this journey.",
-        "",
-        "Journey: An Overnight on Alleppey's Waterways (2 days / 1 night)",
+        "Hi Canty Tours! I'd like to plan the “An Overnight on Alleppey's Waterways” sample journey (2 days / 1 night).",
         "Route: Kochi → Alappuzha → Kochi",
+        "https://example.com/journeys/kerala-houseboat/",
         "",
         "Name: Asha",
-        "Phone: +91 98765 43210",
+        "Travel date: 2026-12-20",
+        "Occasion: Honeymoon / couple",
+        "Travellers: 2 travellers",
+        "Budget per person: Let’s discuss",
         "",
-        "Please get in touch to plan it with me.",
+        "Please share availability, pricing and inclusions.",
       ].join("\n"),
     );
   });

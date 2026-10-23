@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { TourCard } from "@/components/cards/TourCard";
 import { useJourneys } from "@/components/JourneyProvider";
 import { Button } from "@/components/ui/Button";
@@ -28,12 +28,8 @@ export function Journeys() {
     showRegion,
     resetFilters,
     revealCount,
-    sharedId,
-    setSharedId,
-    openSharedJourney,
     compared,
     toggleCompare,
-    showDetails,
     planTrip,
   } = useJourneys();
   const keralaView = isKeralaView(filters.region);
@@ -64,24 +60,6 @@ export function Journeys() {
     // Runs once per reveal request; the other values come from the same render.
   }, [revealCount]);
 
-  // Shared links (#journey=<id>) open that journey, now and whenever the hash changes.
-  const openShared = useRef(openSharedJourney);
-  openShared.current = openSharedJourney;
-  useEffect(() => {
-    const open = () => openShared.current();
-    open();
-    window.addEventListener("hashchange", open);
-    return () => window.removeEventListener("hashchange", open);
-  }, []);
-  useEffect(() => {
-    if (!sharedId) return;
-    document
-      .getElementById(`journey-${sharedId}`)
-      ?.scrollIntoView({ block: "center", behavior: "instant" });
-    showDetails(sharedId);
-    setSharedId(null);
-  }, [sharedId, showDetails, setSharedId]);
-
   return (
     <section
       id="journeys"
@@ -94,7 +72,14 @@ export function Journeys() {
           eyebrow={journeysEyebrow(filters.region)}
           eyebrowId="journey-eyebrow"
           title={
-            place ? `${place} journey ideas` : "A few days. A different rhythm."
+            place ? (
+              `${place} journey ideas`
+            ) : (
+              <>
+                A few days.
+                <br />A different rhythm.
+              </>
+            )
           }
           titleId="journey-title"
           intro={
@@ -169,7 +154,6 @@ export function Journeys() {
               found={highlightKey === gridKey}
               compared={compared.includes(t.id)}
               onCompareChange={(on) => toggleCompare(t.id, on)}
-              onDetails={() => showDetails(t.id)}
             />
           ))}
         </div>
@@ -215,9 +199,9 @@ export function Journeys() {
           </p>
         </noscript>
         <p className="fineprint">
-          Sample itineraries, made to be personalised. Prices, hotels,
-          activities and availability are confirmed in your personalised
-          quotation. Flights are not assumed to be included.
+          Every journey is a sample route, shaped around you. Prices are on
+          request: hotels, activities and availability are confirmed in your
+          personalised quotation. Flights are not assumed to be included.
         </p>
       </div>
     </section>

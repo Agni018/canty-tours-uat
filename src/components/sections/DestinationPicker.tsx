@@ -21,6 +21,9 @@ type DestinationPickerProps = {
   labelClassName?: string;
 };
 
+/** 480px copy of a place photo (public/assets/thumbs/): the picker shows them at about 150px. */
+const thumb = (image: string) => asset(`thumbs/${image.split("/").pop()}`);
+
 const regionChoiceLabel = (value: string) => {
   if (value === "Kerala") return "All Kerala";
   const option = regionOptions.find(
@@ -77,17 +80,25 @@ export function DestinationPicker({
         `${Math.max(80, window.innerHeight - top - 16)}px`,
       );
     };
-    if (
-      panel.current &&
-      window.innerHeight - panel.current.getBoundingClientRect().top < 320
-    ) {
-      const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
-      document.getElementById("finder")?.scrollIntoView({
-        block: "start",
-        behavior: reduced ? "instant" : "smooth",
-      });
-    }
-    fit();
+    // The finder may still be moving up (see FinderBar): measure once it has come to rest.
+    let closed = false;
+    const finder = panel.current?.offsetParent as HTMLElement | null;
+    Promise.allSettled(
+      finder?.getAnimations().map((a) => a.finished) ?? [],
+    ).then(() => {
+      if (closed || !panel.current) return;
+      if (
+        window.innerHeight - panel.current.getBoundingClientRect().top <
+        320
+      ) {
+        const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+        finder?.scrollIntoView({
+          block: "start",
+          behavior: reduced ? "instant" : "smooth",
+        });
+      }
+      fit();
+    });
     if (focusChoiceOnOpen.current) {
       const chosen =
         options.current?.querySelector<HTMLButtonElement>(
@@ -109,6 +120,7 @@ export function DestinationPicker({
     window.addEventListener("resize", fit);
     window.addEventListener("scroll", fit, { passive: true });
     return () => {
+      closed = true;
       document.removeEventListener("keydown", onKey);
       document.removeEventListener("click", onClick);
       window.removeEventListener("resize", fit);
@@ -195,7 +207,7 @@ export function DestinationPicker({
         {place && (
           <img
             className={styles.thumb}
-            src={asset(place.image)}
+            src={thumb(place.image)}
             alt=""
             width={24}
             height={24}
@@ -247,7 +259,7 @@ export function DestinationPicker({
             >
               <span className={styles.photo}>
                 <img
-                  src={asset(p.image)}
+                  src={thumb(p.image)}
                   alt=""
                   loading="lazy"
                   decoding="async"

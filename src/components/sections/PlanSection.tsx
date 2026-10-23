@@ -1,6 +1,6 @@
 import { phone, whatsappLink } from "@/data/site";
 import { cx } from "@/lib/utils";
-import { TripForm } from "./TripForm";
+import { EnquiryForm } from "./EnquiryForm";
 import { Icon } from "@/components/ui/Icon";
 import styles from "./PlanSection.module.css";
 
@@ -46,7 +46,7 @@ export function PlanSection() {
             </a>
           </p>
         </div>
-        <TripForm />
+        <EnquiryForm />
       </div>
     </section>
   );

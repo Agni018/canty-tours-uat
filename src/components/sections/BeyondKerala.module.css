@@ -1,5 +1,5 @@
 .section {
-  background: #f0eee7;
+  background: var(--sand);
 }
 .grid {
   display: grid;

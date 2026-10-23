@@ -24,10 +24,10 @@ export function PrivacyDialog() {
       <h2 id="privacy-title">Privacy &amp; credits</h2>
       <h3>Your trip details</h3>
       <p>
-        This website does not save your trip form to a database. Selecting
-        “Continue on WhatsApp” or “Connect on WhatsApp” passes the details you
-        entered to WhatsApp in a prepared message. You choose whether to send
-        it. WhatsApp’s own privacy terms apply.
+        This website does not save your enquiry to a database. Selecting “Send
+        on WhatsApp” passes the details you entered to WhatsApp in a prepared
+        message. You choose whether to send it. WhatsApp’s own privacy terms
+        apply.
       </p>
       <p>
         Journey comparisons stay in this tab and reset when you reload. Hosting

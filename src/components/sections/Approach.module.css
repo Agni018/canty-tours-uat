@@ -14,7 +14,7 @@
   object-position: 50%;
 }
 .note {
-  background: #eddec4;
+  background: color-mix(in srgb, var(--marigold) 22%, var(--cream));
   position: absolute;
   right: -26px;
   bottom: 32px;
@@ -86,10 +86,12 @@
 }
 @media (max-width: 800px) {
   .approach {
+    grid-template-columns: 1fr;
     gap: 40px;
   }
   .photo {
-    height: 560px;
+    height: 480px;
+    margin-right: 20px;
   }
   .note {
     right: -16px;
@@ -97,12 +99,8 @@
   }
 }
 @media (max-width: 540px) {
-  .approach {
-    grid-template-columns: 1fr;
-  }
   .photo {
     height: 430px;
-    margin-right: 20px;
   }
   .photo img {
     border-radius: 110px 110px 8px 8px;

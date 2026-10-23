@@ -3,13 +3,22 @@ import type {
   ButtonHTMLAttributes,
   ReactNode,
 } from "react";
+import Link from "next/link";
 import { cx } from "@/lib/utils";
 import { Icon } from "./Icon";
 import styles from "./Button.module.css";
 
 type Common = {
-  /** dark (default), orange for the main call to action, outline for a secondary action. */
-  variant?: "dark" | "orange" | "outline";
+  /**
+   * dark (default), orange for the main call to action, outline for a low-key action, ghost for
+   * a light see-through button on photos and dark backgrounds.
+   */
+  variant?: "dark" | "orange" | "outline" | "ghost";
+  /**
+   * Adds depth (sheen, shadow, lift on hover). Only for the one main action of a screen or
+   * dialog, the one that completes the task; every other button stays flat.
+   */
+  raised?: boolean;
   small?: boolean;
   /** Adds the ↗ arrow after the label. */
   arrow?: boolean;
@@ -24,6 +33,7 @@ type AsLink = Common &
 /** Primary call-to-action. Renders a link when `href` is given, otherwise a button. */
 export function Button({
   variant = "dark",
+  raised,
   small,
   arrow,
   className,
@@ -34,6 +44,8 @@ export function Button({
     styles.button,
     variant === "orange" && styles.orange,
     variant === "outline" && styles.outline,
+    variant === "ghost" && styles.ghost,
+    raised && styles.raised,
     small && styles.small,
     className,
   );
@@ -49,13 +61,12 @@ export function Button({
     </>
   );
   if (rest.href !== undefined) {
+    // next/link adds the site's base path to links between pages; outside links pass through.
+    const { href, ...linkProps } = rest as AsLink;
     return (
-      <a
-        className={classes}
-        {...(rest as AnchorHTMLAttributes<HTMLAnchorElement>)}
-      >
+      <Link href={href} className={classes} {...linkProps}>
         {content}
-      </a>
+      </Link>
     );
   }
   const { type = "button", ...buttonProps } =

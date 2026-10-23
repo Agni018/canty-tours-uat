@@ -1,35 +1,33 @@
-import { useRef, type CSSProperties } from "react";
+import Link from "next/link";
+import type { CSSProperties } from "react";
 import { Icon } from "@/components/ui/Icon";
 import type { Tour } from "@/data/tours";
-import { regionLabel } from "@/lib/journeys";
-import { asset, cx } from "@/lib/utils";
+import { durationText, highlightList, regionLabel } from "@/lib/journeys";
+import { asset, cx, journeyPath } from "@/lib/utils";
 import styles from "./TourCard.module.css";
 
 type TourCardProps = {
   tour: Tour;
   /** Position in the grid; staggers the entrance animation. */
-  index: number;
+  index?: number;
   /** Briefly highlights the card after a destination search. */
-  found: boolean;
-  compared: boolean;
-  onCompareChange: (on: boolean) => void;
-  onDetails: () => void;
+  found?: boolean;
+  /** The compare checkbox shows only when these are given (not in "more journeys" lists). */
+  compared?: boolean;
+  onCompareChange?: (on: boolean) => void;
 };
 
 /**
- * Journey card in the grid. The whole card opens the itinerary, except the compare checkbox
- * and except when the visitor has just selected text on it.
+ * Journey card linking to the journey's page. The title link covers the whole card (one link
+ * per card for keyboard and screen-reader users); the compare checkbox sits above it.
  */
 export function TourCard({
   tour: t,
-  index,
+  index = 0,
   found,
   compared,
   onCompareChange,
-  onDetails,
 }: TourCardProps) {
-  const selectionAtPress = useRef("");
-
   return (
     <article
       id={`journey-${t.id}`}
@@ -37,18 +35,6 @@ export function TourCard({
       style={{ "--i": index } as CSSProperties}
       tabIndex={-1}
       aria-labelledby={`journey-title-${t.id}`}
-      onPointerDown={() => {
-        selectionAtPress.current = String(window.getSelection());
-      }}
-      onClick={(e) => {
-        const target = e.target as Element;
-        if (target.closest("label")) return;
-        const selection = String(window.getSelection());
-        const selecting =
-          selection.trim() && selection !== selectionAtPress.current;
-        if (!target.closest("button") && selecting) return;
-        onDetails();
-      }}
     >
       <div className={styles.photo}>
         <img
@@ -61,27 +47,36 @@ export function TourCard({
       </div>
       <div className={styles.body}>
         <p className={styles.meta}>
-          {`${t.nights} ${t.nights === 1 ? "NIGHT" : "NIGHTS"} / ${t.days} DAYS   ·   ${regionLabel(t)}`}
+          {`${durationText(t)}   ·   ${regionLabel(t)}`}
         </p>
-        <h3 id={`journey-title-${t.id}`}>{t.name}</h3>
+        <h3 id={`journey-title-${t.id}`}>
+          <Link href={journeyPath(t.id)} className={styles.link}>
+            {t.name}
+          </Link>
+        </h3>
         <p className={styles.route}>{t.route}</p>
-        <p className={styles.desc}>{t.description}</p>
+        <ul className={styles.highlights} aria-label="Highlights">
+          {highlightList(t)
+            .slice(0, 3)
+            .map((h) => (
+              <li key={h}>{h}</li>
+            ))}
+        </ul>
         <div className={styles.bottom}>
-          <span className={styles.quote}>
-            Made for you<small>Price on request</small>
-          </span>
-          <button type="button" className={styles.details}>
+          <span className={styles.view} aria-hidden="true">
             View journey <Icon name="arrow" />
-          </button>
+          </span>
+          {onCompareChange && (
+            <label className={styles.compare}>
+              <input
+                type="checkbox"
+                checked={compared}
+                onChange={(e) => onCompareChange(e.target.checked)}
+              />{" "}
+              Compare
+            </label>
+          )}
         </div>
-        <label className={styles.compare}>
-          <input
-            type="checkbox"
-            checked={compared}
-            onChange={(e) => onCompareChange(e.target.checked)}
-          />{" "}
-          Compare this journey
-        </label>
       </div>
     </article>
   );

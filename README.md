@@ -27,15 +27,17 @@ npm run dev      # http://localhost:3000, reloads on save
 
 ```
 src/
-  app/                  Next.js entry: layout (fonts, metadata), page, global CSS, favicon
+  app/                  Next.js entry: layout (header, footer, fonts, metadata), home page,
+                        journeys/[id]/ (one page per journey), global CSS, favicon
   components/
-    ui/                 Reusable building blocks: Button, TextButton, Chip, Select, Field,
+    ui/                 Reusable building blocks: Button, TextButton, Chip, Dropdown, Field,
                         Modal, SectionHeading, Brand, Icon
     cards/              TourCard, DestinationCard, IndiaCard
     sections/           One component per page section (Header, Hero, FinderBar, Journeys, …)
     overlays/           Dialogs, compare bar and toast
-    JourneyProvider.tsx Shared page state: filters, comparison, dialogs, planned tour
-  data/                 Content: tours, destinations, dropdown options, contact details
+    JourneyProvider.tsx Shared state: filters (kept in the address), comparison, dialogs
+  data/                 Content: tours, destinations, dropdown options, contact details,
+                        testimonials (real ones only; the section is hidden while empty)
   lib/                  Pure logic (filtering, labels, WhatsApp text) and its tests
 public/assets/          Photos, served as /assets/…
 ```
@@ -116,4 +118,4 @@ Downloaded from Unsplash, re-sized for the site, used under the [Unsplash Licens
 - Goa, Arun Prakash: https://unsplash.com/photos/weeJiR-xXC0
 - Sikkim, North Bengal Tourism: https://unsplash.com/photos/E6rnGEJnvYo
 
-Typography: Fraunces (headings) and Inter (text) from Google Fonts, self-hosted at build time by `next/font`.
+Typography: Playfair Display (headings) and Montserrat (text) from Google Fonts, self-hosted at build time by `next/font`.

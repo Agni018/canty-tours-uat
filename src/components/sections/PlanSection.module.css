@@ -60,9 +60,6 @@
   .copy > p:not(.eyebrow) {
     margin-top: 20px;
   }
-  .copy .note {
-    display: none;
-  }
 }
 @media (max-width: 540px) {
   .section {

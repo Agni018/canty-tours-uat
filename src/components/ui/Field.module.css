@@ -12,9 +12,9 @@
   width: 100%;
   padding: 12px;
   margin-top: 6px;
-  border: 1px solid #d8dcd0;
-  background: #fffefa;
-  border-radius: 6px;
+  border: 1px solid var(--control);
+  background: var(--surface);
+  border-radius: 10px;
   color: var(--ink);
   font-size: var(--text-base);
   min-width: 0;

@@ -12,6 +12,8 @@ const paths = {
   chevronDown: "m4 6 4 4 4-4",
   chevronLeft: "m10 3-5 5 5 5",
   chevronRight: "m6 3 5 5-5 5",
+  // ☰ menu
+  menu: "M2.5 4.5h11M2.5 8h11M2.5 11.5h11",
 };
 
 type IconProps = { name: keyof typeof paths; className?: string };

@@ -6,9 +6,10 @@ point here; edit this file only.
 
 ## What this is
 
-Marketing site for Canty Tours, a Kerala-first travel company. One page: destination cards, a
-filterable journey grid, a compare dialog and a trip planner that opens WhatsApp with a prepared
-message. No backend, no database, no stored personal data.
+Marketing site for Canty Tours, a Kerala-first travel company. A home page (destination cards, a
+filterable journey grid, a compare dialog, a trip planner) and one page per journey with its
+day-by-day route and an enquiry form. Enquiries open WhatsApp with a prepared message. No backend,
+no database, no stored personal data.
 
 ## Stack
 
@@ -31,27 +32,31 @@ npm run check    # format check + tests + build — run before every commit
 
 ## Where things go
 
-| Change                                | Place                                         |
-| ------------------------------------- | --------------------------------------------- |
-| Tour content                          | `src/data/tours.ts`                           |
-| Dropdown options, filter types        | `src/data/options.ts`                         |
-| Destination cards                     | `src/data/destinations.ts`                    |
-| "Where to?" picker places + credits   | `src/data/places.ts`                          |
-| Contact-form country codes            | `src/data/countryCodes.ts`                    |
-| Phone / WhatsApp                      | `src/data/site.ts`                            |
-| Filtering, labels, message text       | `src/lib/journeys.ts` + `journeys.test.ts`    |
-| Generic UI (buttons, fields, dialogs) | `src/components/ui/`                          |
-| Cards                                 | `src/components/cards/`                       |
-| Page sections                         | `src/components/sections/`                    |
-| Dialogs, bars, toasts                 | `src/components/overlays/`                    |
-| Shared page state                     | `src/components/JourneyProvider.tsx`          |
-| Photos                                | `public/assets/` (~1200px wide JPEG, <300 KB) |
+| Change                                | Place                                                 |
+| ------------------------------------- | ----------------------------------------------------- |
+| Tour content                          | `src/data/tours.ts`                                   |
+| Journey pages (one per tour)          | `src/app/journeys/[id]/page.tsx`, `JourneyDetail.tsx` |
+| Testimonials (real ones only)         | `src/data/testimonials.ts`                            |
+| Dropdown options, filter types        | `src/data/options.ts`                                 |
+| Destination cards                     | `src/data/destinations.ts`                            |
+| "Where to?" picker places + credits   | `src/data/places.ts`                                  |
+| Contact-form country codes            | `src/data/countryCodes.ts`                            |
+| Phone / WhatsApp                      | `src/data/site.ts`                                    |
+| Filtering, labels, message text       | `src/lib/journeys.ts` + `journeys.test.ts`            |
+| Generic UI (buttons, fields, dialogs) | `src/components/ui/`                                  |
+| Cards                                 | `src/components/cards/`                               |
+| Page sections                         | `src/components/sections/`                            |
+| Dialogs, bars, toasts                 | `src/components/overlays/`                            |
+| Shared page state                     | `src/components/JourneyProvider.tsx`                  |
+| Photos                                | `public/assets/` (~1200px wide JPEG, <300 KB)         |
 
 ## Component rules
 
-- Reuse `src/components/ui/` first: `Button` (variant, small, arrow, href → link), `TextButton`,
-  `Chip`, `Select` (options list), `Field` (labelled form control), `Modal` (native dialog),
-  `SectionHeading`, `Brand`, `Icon`. Extend one with a prop before creating a near-duplicate.
+- Reuse `src/components/ui/` first: `Button` (variant, raised, small, arrow, href → link),
+  `TextButton`, `Chip`, `Dropdown` (custom select; `boxed` inside forms; no native `<select>`),
+  `Field` (labelled input or textarea), `Modal` (native dialog), `SectionHeading`, `Brand`,
+  `Icon`. Extend one with a prop before creating a near-duplicate.
+- Links between pages use `next/link` (`Button href`, `Brand` already do): it adds the base path.
 - One component per file, named export, PascalCase file name, props typed with a `type`.
 - Add `"use client"` only to components that use state, effects or event handlers.
 - Content belongs in `src/data/`, not hard-coded in components, when it is a list or repeats.
@@ -66,12 +71,16 @@ npm run check    # format check + tests + build — run before every commit
 - Each component has a `Name.module.css` next to it; class names in camelCase.
 - Use the tokens in `src/app/globals.css`; no raw hex text colours or pixel font sizes in
   components:
-  - Colour: `--ink`, `--cream`, `--muted`, `--orange`, `--line`, `--on-dark`, `--on-dark-muted`,
-    `--accent-dark`, `--accent-light`.
+  - Colour (palette rationale in `globals.css`): neutrals `--cream`, `--surface`, `--sand`,
+    `--line` (decorative edges), `--control` (input and chip edges, 3:1); palm green `--ink`,
+    `--ink-hover`, `--green-soft`, `--muted`; saffron and marigold `--orange`, `--orange-hover`,
+    `--marigold`, `--accent-dark`, `--accent-light`; text on dark `--on-dark`, `--on-dark-muted`.
+    For a tint, use `color-mix(in srgb, var(--token) N%, transparent)`, not a new hex value.
+  - Depth: buttons are flat; only the one main action of a screen or dialog gets `raised`.
   - Type: `--text-label` (12px uppercase labels, with `--tracking-label`), `--text-xs` 13,
     `--text-sm` 14, `--text-base` 16 (body and form controls), `--text-lg` 18, then fluid
     headings `--text-xl`, `--text-h3`, `--text-h2`, `--text-h1`, `--text-display`.
-  - Fonts: `--serif` (Fraunces) for headings and card titles, `--sans` (Inter) for everything
+  - Fonts: `--serif` (Playfair Display) for headings and card titles, `--sans` (Montserrat) for everything
     else. Both are loaded by `next/font` in `src/app/layout.tsx`; italics are real italics.
 - Text is never smaller than 12px. The only exception is the logo lockup in `Brand`.
 - Breakpoints are `max-width` 1100px, 800px and 540px. Put a component's media queries at the end
