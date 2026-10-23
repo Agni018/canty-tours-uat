@@ -1,6 +1,7 @@
 import { JourneyProvider } from "@/components/JourneyProvider";
 import { CompareBar } from "@/components/overlays/CompareBar";
 import { CompareDialog } from "@/components/overlays/CompareDialog";
+import { ConnectDialog } from "@/components/overlays/ConnectDialog";
 import { PrivacyDialog } from "@/components/overlays/PrivacyDialog";
 import { Toast } from "@/components/overlays/Toast";
 import { TourDetailDialog } from "@/components/overlays/TourDetailDialog";
@@ -38,6 +39,7 @@ export default function HomePage() {
       <CompareBar />
       <TourDetailDialog />
       <CompareDialog />
+      <ConnectDialog />
       <PrivacyDialog />
       <Toast />
     </JourneyProvider>

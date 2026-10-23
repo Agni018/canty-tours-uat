@@ -1,4 +1,17 @@
 /* Cards rise in one after another (--i = position in the grid) whenever the grid is rebuilt. */
+/* After a destination search the matching cards pulse an orange ring once. */
+@keyframes found {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgb(187 84 43 / 0);
+  }
+  15%,
+  60% {
+    box-shadow:
+      0 0 0 3px var(--orange),
+      0 18px 40px rgb(187 84 43 / 0.16);
+  }
+}
 @keyframes cardIn {
   from {
     opacity: 0;
@@ -12,11 +25,17 @@
   overflow: hidden;
   display: flex;
   flex-direction: column;
+  cursor: pointer;
   animation: cardIn var(--dur-reveal) var(--ease-out) backwards;
   animation-delay: calc(min(var(--i, 0), 8) * 60ms);
   transition:
     transform var(--dur-base) var(--ease-out),
     box-shadow var(--dur-base) var(--ease-out);
+}
+.card.found {
+  animation-name: cardIn, found;
+  animation-duration: var(--dur-reveal), 2.8s;
+  animation-delay: calc(min(var(--i, 0), 8) * 60ms), 450ms;
 }
 .card:hover {
   transform: translateY(-4px);
@@ -97,10 +116,11 @@
   font-weight: 600;
   transition: color var(--dur-fast) var(--ease-out);
 }
-.details:hover {
+.card:hover .details {
   color: var(--orange);
 }
 .compare {
+  align-self: flex-start;
   display: flex;
   align-items: center;
   gap: 8px;

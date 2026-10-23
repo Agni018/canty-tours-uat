@@ -40,6 +40,7 @@ export const durationOptions: SelectOption[] = [
 // Trip form options. The first entry of each list is the default.
 export const tripLengths = [
   "Flexible / to discuss",
+  "2 days",
   "3–4 days",
   "5–6 days",
   "7–8 days",

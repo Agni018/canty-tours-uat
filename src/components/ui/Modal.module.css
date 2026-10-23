@@ -51,6 +51,9 @@
 .wide {
   width: min(1050px, calc(100% - 24px));
 }
+.narrow {
+  width: min(540px, calc(100% - 32px));
+}
 .close {
   position: absolute;
   right: 16px;

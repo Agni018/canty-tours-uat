@@ -6,6 +6,7 @@ type SectionHeadingProps = {
   eyebrow: string;
   eyebrowId?: string;
   title: ReactNode;
+  titleId?: string;
   intro: ReactNode;
 };
 
@@ -14,6 +15,7 @@ export function SectionHeading({
   eyebrow,
   eyebrowId,
   title,
+  titleId,
   intro,
 }: SectionHeadingProps) {
   return (
@@ -22,7 +24,7 @@ export function SectionHeading({
         <p className="eyebrow" id={eyebrowId}>
           {eyebrow}
         </p>
-        <h2>{title}</h2>
+        <h2 id={titleId}>{title}</h2>
       </div>
       <p>{intro}</p>
     </div>

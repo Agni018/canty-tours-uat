@@ -48,8 +48,13 @@ utility classes (`wrap`, `section`, `eyebrow`, `light`, `fineprint`).
 ## Common edits
 
 - **Add or change a tour:** edit `src/data/tours.ts`. Put its photo in `public/assets/` (about
-  1200px wide) and set `image` to the file name without `.jpg`.
-- **Change dropdown options:** `src/data/options.ts`.
+  1000–1200px wide) and set `image` to its path there, e.g. `"destinations/kollam.jpg"`.
+  Record the published itinerary it was checked against in `source`.
+- **Add a place to the "Where to?" picker:** `src/data/places.ts` (photo in
+  `public/assets/destinations/`, with its credit). Make sure at least one tour visits it; a
+  unit test checks this.
+- **Change dropdown options:** `src/data/options.ts`; contact-form country codes:
+  `src/data/countryCodes.ts`.
 - **Change destination cards:** `src/data/destinations.ts`.
 - **Change the phone/WhatsApp number:** `src/data/site.ts`.
 
@@ -70,6 +75,15 @@ the build as `BASE_PATH`. Image paths go through `asset()` in `src/lib/utils.ts`
 Routes are illustrative, with prices on request. No testimonials, performance claims, accreditation
 or rates are fabricated. All quotes and bookings are handled directly with Canty Tours.
 
+Kerala and Tamil Nadu itineraries are original, condensed day-by-day summaries of published
+Paradise Holidays routes, reviewed on 19 October 2026. They keep the published route order, key
+activities and optional or time-dependent qualifications; no prices, guarantees, hotel, meal or
+transport inclusions are transferred. Each tour's reference is its `source` in
+`src/data/tours.ts`, and the list is shown in the site's privacy dialog. Every place in the
+"Where to?" picker has at least one matching route; Alleppey matches Alappuzha routes, Houseboat
+matches overnight and daytime houseboat routes, and the Kanyakumari, Madurai and Rameswaram routes
+appear in both the Kerala and South India collections.
+
 ### Competitor comparison
 
 - Paradise Holidays https://www.paradise-kerala.com/ : Kerala-first navigation, destination browsing, duration-based itinerary ideas, travel styles and planning FAQs. Applied with original Canty copy and sample routes, not competitor prices or business claims. Reviewed 12 October 2026.
@@ -85,6 +99,11 @@ Earlier India-wide layout references:
 Original layout and copy; no competitor branding or proprietary descriptions copied. Earlier references checked 11 October 2026.
 
 ### Photos
+
+"Where to?" picker photos are stored in `public/assets/destinations/`, resized to 960px wide with
+camera metadata removed. Most come from Wikimedia Commons under CC BY-SA, CC BY or public domain;
+photographer, licence and source page for each are in `src/data/places.ts` and shown in the
+privacy dialog, as the licences require.
 
 Downloaded from Unsplash, re-sized for the site, used under the [Unsplash License](https://unsplash.com/license):
 

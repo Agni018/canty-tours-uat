@@ -55,7 +55,14 @@
   letter-spacing: var(--tracking-heading);
 }
 .empty p {
-  margin: 16px 0 24px;
+  margin: 16px auto 24px;
+  max-width: 34rem;
+}
+.emptyActions {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 12px;
 }
 .section noscript p {
   text-align: center;

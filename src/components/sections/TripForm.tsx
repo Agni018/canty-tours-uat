@@ -13,12 +13,7 @@ import {
   tripLengths,
 } from "@/data/options";
 import { whatsappLink } from "@/data/site";
-import {
-  enquiryMessage,
-  occasionFor,
-  tripLengthFor,
-  type Enquiry,
-} from "@/lib/journeys";
+import { enquiryMessage, type Enquiry } from "@/lib/journeys";
 import { cx, scrollToSection } from "@/lib/utils";
 import { Icon } from "@/components/ui/Icon";
 import styles from "./TripForm.module.css";
@@ -31,25 +26,22 @@ function today(): string {
 
 /** Trip planner. Builds a WhatsApp message for the visitor to send; nothing is stored. */
 export function TripForm() {
-  const { plannedTour, notify } = useJourneys();
+  const { tripRequest, notify } = useJourneys();
   const destinationInput = useRef<HTMLInputElement>(null);
   const [destination, setDestination] = useState("Kerala");
-  const [tripLength, setTripLength] = useState(tripLengths[0]);
-  const [occasion, setOccasion] = useState(occasions[0]);
   const [minDate, setMinDate] = useState<string>();
   const [messageUrl, setMessageUrl] = useState<string>();
 
   // Set on the client so a build-time date never goes stale.
   useEffect(() => setMinDate(today()), []);
 
+  // "Plan a custom trip" (empty journey results) fills in the destination and brings the form up.
   useEffect(() => {
-    if (!plannedTour) return;
-    setDestination(plannedTour.destination);
-    setTripLength(tripLengthFor(plannedTour.tour.days));
-    setOccasion(occasionFor(plannedTour.tour));
+    if (!tripRequest) return;
+    setDestination(tripRequest.destination);
     scrollToSection("plan");
     destinationInput.current?.focus({ preventScroll: true });
-  }, [plannedTour]);
+  }, [tripRequest]);
 
   function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -72,12 +64,7 @@ export function TripForm() {
       notify("Please add your name and a destination idea.");
       return;
     }
-    // The sample route is only included while the destination still names that tour.
-    const tour =
-      plannedTour && enquiry.destination === plannedTour.destination
-        ? plannedTour.tour
-        : null;
-    const url = whatsappLink(enquiryMessage(enquiry, tour));
+    const url = whatsappLink(enquiryMessage(enquiry));
     window.open(url, "_blank", "noopener,noreferrer");
     setMessageUrl(url);
   }
@@ -116,23 +103,13 @@ export function TripForm() {
           <input name="date" type="date" id="travel-date" min={minDate} />
         </Field>
         <Field label="How long can you stay?">
-          <Select
-            name="tripLength"
-            options={tripLengths}
-            value={tripLength}
-            onChange={(e) => setTripLength(e.target.value)}
-          />
+          <Select name="tripLength" options={tripLengths} />
         </Field>
         <Field label="Who’s coming?">
           <Select name="travellers" options={travellerCounts} />
         </Field>
         <Field label="What’s the occasion?">
-          <Select
-            name="occasion"
-            options={occasions}
-            value={occasion}
-            onChange={(e) => setOccasion(e.target.value)}
-          />
+          <Select name="occasion" options={occasions} />
         </Field>
         <Field label="Budget per person">
           <Select name="budget" options={budgets} />

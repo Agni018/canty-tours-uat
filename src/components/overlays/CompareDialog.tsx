@@ -5,16 +5,17 @@ import { useJourneys } from "@/components/JourneyProvider";
 import { Button } from "@/components/ui/Button";
 import { Modal } from "@/components/ui/Modal";
 import { tours, type Tour } from "@/data/tours";
+import { durationText } from "@/lib/journeys";
 import { Icon } from "@/components/ui/Icon";
 import styles from "./CompareDialog.module.css";
 
 /** Side-by-side table of the selected journeys. */
 export function CompareDialog() {
-  const { compared, compareOpen, setCompareOpen, planTour } = useJourneys();
+  const { compared, compareOpen, setCompareOpen, openConnect } = useJourneys();
   const items = tours.filter((t) => compared.includes(t.id));
 
   const rows: [string, (t: Tour) => ReactNode][] = [
-    ["Duration", (t) => `${t.days} days / ${t.nights} nights`],
+    ["Duration", (t) => durationText(t)],
     ["Route", (t) => t.route],
     ["Travel style", (t) => t.style],
     ["Pace", (t) => t.pace],
@@ -24,7 +25,7 @@ export function CompareDialog() {
     [
       "Next step",
       (t) => (
-        <Button className={styles.planButton} onClick={() => planTour(t.id)}>
+        <Button className={styles.planButton} onClick={() => openConnect(t.id)}>
           Plan this trip <Icon name="arrow" />
         </Button>
       ),
@@ -34,7 +35,7 @@ export function CompareDialog() {
   return (
     <Modal
       id="compare-dialog"
-      wide
+      size="wide"
       open={compareOpen}
       onClose={() => setCompareOpen(false)}
       labelledBy="compare-title"

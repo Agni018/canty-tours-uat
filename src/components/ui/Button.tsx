@@ -8,7 +8,8 @@ import { Icon } from "./Icon";
 import styles from "./Button.module.css";
 
 type Common = {
-  variant?: "dark" | "orange";
+  /** dark (default), orange for the main call to action, outline for a secondary action. */
+  variant?: "dark" | "orange" | "outline";
   small?: boolean;
   /** Adds the ↗ arrow after the label. */
   arrow?: boolean;
@@ -32,6 +33,7 @@ export function Button({
   const classes = cx(
     styles.button,
     variant === "orange" && styles.orange,
+    variant === "outline" && styles.outline,
     small && styles.small,
     className,
   );

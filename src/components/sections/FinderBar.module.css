@@ -18,15 +18,17 @@
   z-index: 2;
   animation: finderIn var(--dur-reveal) var(--ease-out) 500ms backwards;
 }
-.finder label {
+.field {
+  min-width: 0;
   padding: 0 24px;
   border-right: 1px solid var(--line);
 }
-.finder label:first-child {
+.field:first-child {
   padding-left: 4px;
 }
-.finder label > span {
+.label {
   display: block;
+  cursor: pointer;
   font-size: var(--text-label);
   font-weight: 600;
   letter-spacing: var(--tracking-label);
@@ -51,7 +53,7 @@
   .finder {
     padding: 18px 16px;
   }
-  .finder label {
+  .field {
     padding: 0 14px;
   }
   .finder .submit {
@@ -65,9 +67,9 @@
     gap: 20px;
     padding: 24px;
   }
-  /* !important also clears the first label's extra padding. */
-  .finder label {
-    padding: 0 !important;
+  .field,
+  .field:first-child {
+    padding: 0;
     border: none;
   }
   .finder .submit {

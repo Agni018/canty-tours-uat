@@ -8,38 +8,40 @@ import {
   type ReactNode,
 } from "react";
 import type { RegionFilter } from "@/data/options";
-import { tours, type Tour } from "@/data/tours";
+import { tours } from "@/data/tours";
 import {
   defaultFilters,
-  planDestination,
+  filterTours,
   tourVisiting,
   type Filters,
 } from "@/lib/journeys";
 import { scrollToSection } from "@/lib/utils";
 
-/** The finder's select values. They only reach the grid when filters are applied. */
-type FinderFields = Omit<Filters, "destination">;
-
-/** A tour picked with "Plan this trip"; TripForm prefills itself from it. */
-export type PlannedTour = { tour: Tour; destination: string };
+/** A request for TripForm to fill in a destination and take focus. */
+export type TripRequest = { destination: string };
 
 const MAX_COMPARE = 3;
 
 function useJourneyState() {
-  const [{ fields, filters }, setFilterState] = useState(() => {
-    const { region, style, duration } = defaultFilters;
-    return {
-      fields: { region, style, duration } as FinderFields,
-      filters: defaultFilters,
-    };
+  // `fields` is what the finder shows; `filters` is what the grid shows. Picking in the finder
+  // only changes `fields` until the visitor presses "Find my journey" or another filter control.
+  const [{ fields, filters }, setFilterState] = useState({
+    fields: defaultFilters,
+    filters: defaultFilters,
   });
+  // Bumped when the results should be scrolled to and pointed out (see Journeys).
+  const [revealCount, setRevealCount] = useState(0);
+  // Journey from a shared #journey=<id> link, waiting for its card to render.
+  const [sharedId, setSharedId] = useState<string | null>(null);
   const [compared, setCompared] = useState<string[]>([]);
   const [detailId, setDetailId] = useState<string | null>(null);
+  const [connectId, setConnectId] = useState<string | null>(null);
   const [compareOpen, setCompareOpen] = useState(false);
   const [privacyOpen, setPrivacyOpen] = useState(false);
-  const [plannedTour, setPlannedTour] = useState<PlannedTour | null>(null);
+  const [tripRequest, setTripRequest] = useState<TripRequest | null>(null);
   const [toast, setToast] = useState({ message: "", visible: false });
   const toastTimer = useRef<ReturnType<typeof setTimeout>>(undefined);
+  const matches = filterTours(tours, filters);
 
   function notify(message: string) {
     setToast({ message, visible: true });
@@ -50,31 +52,34 @@ function useJourneyState() {
     );
   }
 
-  /** Updates finder fields and shows the result in the grid. The destination is kept unless given. */
+  /** Updates the finder and shows the result in the grid. */
   function applyFilters(changes: Partial<Filters>) {
     setFilterState((s) => {
-      const { destination = s.filters.destination, ...fieldChanges } = changes;
-      const nextFields = { ...s.fields, ...fieldChanges };
-      return { fields: nextFields, filters: { ...nextFields, destination } };
+      const next = { ...s.fields, ...changes };
+      return { fields: next, filters: next };
     });
   }
 
   return {
     fields,
     filters,
-    setField<K extends keyof FinderFields>(key: K, value: FinderFields[K]) {
-      setFilterState((s) => ({ ...s, fields: { ...s.fields, [key]: value } }));
+    /** Tours currently shown in the grid, in order. */
+    matches,
+    /** Changes the finder without updating the grid yet. */
+    setFields(changes: Partial<Filters>) {
+      setFilterState((s) => ({ ...s, fields: { ...s.fields, ...changes } }));
     },
     applyFilters,
-    /** Finder submit: the finder has no destination control, so it clears the destination. */
+    revealCount,
+    /** Finder submit: show the finder's choices and point out the results. */
     findJourneys() {
-      applyFilters({ destination: "" });
-      scrollToSection("journeys");
+      applyFilters({});
+      setRevealCount((n) => n + 1);
     },
     showDestination(destination: string) {
       const region = tourVisiting(tours, destination)?.region ?? "all";
       applyFilters({ destination, region, style: "all", duration: "all" });
-      scrollToSection("journeys");
+      setRevealCount((n) => n + 1);
     },
     showRegion(region: RegionFilter) {
       applyFilters({ destination: "", region, style: "all", duration: "all" });
@@ -82,6 +87,22 @@ function useJourneyState() {
     },
     resetFilters() {
       applyFilters(defaultFilters);
+    },
+
+    sharedId,
+    setSharedId,
+    /** Opens the journey named in a #journey=<id> link, widening the filters if it's hidden. */
+    openSharedJourney() {
+      const tour = tours.find((t) => location.hash === `#journey=${t.id}`);
+      if (!tour) return;
+      if (!filterTours(tours, filters).includes(tour)) {
+        const inKerala = filterTours(tours, defaultFilters).includes(tour);
+        applyFilters({
+          ...defaultFilters,
+          region: inKerala ? "Kerala" : "all",
+        });
+      }
+      setSharedId(tour.id);
     },
 
     compared,
@@ -99,20 +120,24 @@ function useJourneyState() {
 
     detailTour: tours.find((t) => t.id === detailId) ?? null,
     showDetails: setDetailId,
+    /** Moves the open journey dialog to the previous (-1) or next (1) journey in the grid. */
+    stepDetails(step: number) {
+      const index = matches.findIndex((t) => t.id === detailId);
+      if (index < 0 || matches.length < 2) return;
+      setDetailId(matches[(index + step + matches.length) % matches.length].id);
+    },
+    /** "Personalise this journey" contact dialog; opens on top of any open dialog. */
+    connectTour: tours.find((t) => t.id === connectId) ?? null,
+    openConnect: setConnectId,
     compareOpen,
     setCompareOpen,
     privacyOpen,
     setPrivacyOpen,
 
-    plannedTour,
-    planTour(id: string) {
-      const tour = tours.find((t) => t.id === id);
-      if (!tour) return;
-      // Close dialogs synchronously: the trip form can't take focus while a modal is open.
-      document
-        .querySelectorAll("dialog[open]")
-        .forEach((d) => (d as HTMLDialogElement).close());
-      setPlannedTour({ tour, destination: planDestination(tour) });
+    tripRequest,
+    /** Fills the trip planner with a destination, scrolls to it and focuses it. */
+    planTrip(destination: string) {
+      setTripRequest({ destination });
     },
 
     toast,
@@ -124,7 +149,7 @@ const JourneyContext = createContext<ReturnType<typeof useJourneyState> | null>(
   null,
 );
 
-/** Holds the page's shared state: filters, comparison, open dialogs, planned tour and toast. */
+/** Holds the page's shared state: filters, comparison, open dialogs, trip requests and toast. */
 export function JourneyProvider({ children }: { children: ReactNode }) {
   return <JourneyContext value={useJourneyState()}>{children}</JourneyContext>;
 }

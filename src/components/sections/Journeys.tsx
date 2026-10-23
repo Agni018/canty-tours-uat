@@ -1,44 +1,102 @@
 "use client";
 
+import { useEffect, useRef, useState } from "react";
 import { TourCard } from "@/components/cards/TourCard";
 import { useJourneys } from "@/components/JourneyProvider";
 import { Button } from "@/components/ui/Button";
 import { Chip } from "@/components/ui/Chip";
+import { Icon } from "@/components/ui/Icon";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { TextButton } from "@/components/ui/TextButton";
 import { travelStyles } from "@/data/options";
 import { whatsappLink } from "@/data/site";
-import { tours } from "@/data/tours";
-import { filterTours, isKeralaView, resultsSummary } from "@/lib/journeys";
+import {
+  destinationLabel,
+  isKeralaView,
+  journeysEyebrow,
+  resultsSummary,
+} from "@/lib/journeys";
 import { cx } from "@/lib/utils";
-import { Icon } from "@/components/ui/Icon";
 import styles from "./Journeys.module.css";
 
 /** Filterable journey grid with collection tabs, style chips and the compare checkboxes. */
 export function Journeys() {
   const {
     filters,
+    matches,
     applyFilters,
     showRegion,
     resetFilters,
+    revealCount,
+    sharedId,
+    setSharedId,
+    openSharedJourney,
     compared,
     toggleCompare,
     showDetails,
+    planTrip,
   } = useJourneys();
-  const matches = filterTours(tours, filters);
   const keralaView = isKeralaView(filters.region);
+  const place = filters.destination
+    ? destinationLabel(filters.destination)
+    : "";
+  // A new key rebuilds the grid so the cards' entrance animation plays again.
+  const gridKey = [...Object.values(filters), revealCount].join("|");
+  const [highlightKey, setHighlightKey] = useState("");
+
+  // After "Find my journey" or a destination card: scroll to the results and point them out.
+  useEffect(() => {
+    if (!revealCount) return;
+    const found = matches.length > 0 && Boolean(filters.destination);
+    const target = document.getElementById(
+      !matches.length ? "no-results" : found ? "results-count" : "journeys",
+    );
+    const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const focusTarget = found
+      ? document.getElementById(`journey-${matches[0].id}`)
+      : target;
+    focusTarget?.focus({ preventScroll: true });
+    target?.scrollIntoView({
+      block: "start",
+      behavior: reduced ? "instant" : "smooth",
+    });
+    setHighlightKey(found ? gridKey : "");
+    // Runs once per reveal request; the other values come from the same render.
+  }, [revealCount]);
+
+  // Shared links (#journey=<id>) open that journey, now and whenever the hash changes.
+  const openShared = useRef(openSharedJourney);
+  openShared.current = openSharedJourney;
+  useEffect(() => {
+    const open = () => openShared.current();
+    open();
+    window.addEventListener("hashchange", open);
+    return () => window.removeEventListener("hashchange", open);
+  }, []);
+  useEffect(() => {
+    if (!sharedId) return;
+    document
+      .getElementById(`journey-${sharedId}`)
+      ?.scrollIntoView({ block: "center", behavior: "instant" });
+    showDetails(sharedId);
+    setSharedId(null);
+  }, [sharedId, showDetails, setSharedId]);
 
   return (
-    <section id="journeys" className={cx(styles.section, "section")}>
+    <section
+      id="journeys"
+      className={cx(styles.section, "section")}
+      tabIndex={-1}
+      aria-labelledby="journey-title"
+    >
       <div className="wrap">
         <SectionHeading
-          eyebrow={
-            keralaView
-              ? "YOUR KERALA STORY STARTS HERE"
-              : "YOUR NEXT INDIA STORY STARTS HERE"
-          }
+          eyebrow={journeysEyebrow(filters.region)}
           eyebrowId="journey-eyebrow"
-          title="A few days. A different rhythm."
+          title={
+            place ? `${place} journey ideas` : "A few days. A different rhythm."
+          }
+          titleId="journey-title"
           intro={
             <>
               Short escapes, family time and a little romance.
@@ -102,16 +160,13 @@ export function Journeys() {
         <p id="results-count" className={styles.resultsCount} role="status">
           {resultsSummary(matches.length, filters)}
         </p>
-        <div
-          key={Object.values(filters).join("|")}
-          className={cx(styles.grid, "reveal")}
-          id="tour-grid"
-        >
+        <div key={gridKey} className={cx(styles.grid, "reveal")} id="tour-grid">
           {matches.map((t, i) => (
             <TourCard
               key={t.id}
               tour={t}
               index={i}
+              found={highlightKey === gridKey}
               compared={compared.includes(t.id)}
               onCompareChange={(on) => toggleCompare(t.id, on)}
               onDetails={() => showDetails(t.id)}
@@ -121,15 +176,33 @@ export function Journeys() {
         <div
           id="no-results"
           className={styles.empty}
+          tabIndex={-1}
           hidden={matches.length > 0}
         >
-          <h3>Your next trip is still out there.</h3>
+          <h3>
+            {place
+              ? `Let’s plan your ${place} escape.`
+              : "Your next trip is still out there."}
+          </h3>
           <p>
-            Try a wider search, or ask us to create a route around your plans.
+            {place
+              ? "No sample journeys match these filters. Tell us your dates and we’ll help shape a route around your plans."
+              : "Try a wider search, or ask us to create a route around your plans."}
           </p>
-          <Button id="clear-empty" onClick={resetFilters}>
-            Show Kerala journeys
-          </Button>
+          <div className={styles.emptyActions}>
+            {place && (
+              <Button arrow onClick={() => planTrip(place)}>
+                Plan a custom trip
+              </Button>
+            )}
+            <Button
+              id="clear-empty"
+              variant={place ? "outline" : "dark"}
+              onClick={resetFilters}
+            >
+              Show Kerala journeys
+            </Button>
+          </div>
         </div>
         <noscript>
           <p>

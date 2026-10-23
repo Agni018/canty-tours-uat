@@ -36,6 +36,8 @@ npm run check    # format check + tests + build — run before every commit
 | Tour content                          | `src/data/tours.ts`                           |
 | Dropdown options, filter types        | `src/data/options.ts`                         |
 | Destination cards                     | `src/data/destinations.ts`                    |
+| "Where to?" picker places + credits   | `src/data/places.ts`                          |
+| Contact-form country codes            | `src/data/countryCodes.ts`                    |
 | Phone / WhatsApp                      | `src/data/site.ts`                            |
 | Filtering, labels, message text       | `src/lib/journeys.ts` + `journeys.test.ts`    |
 | Generic UI (buttons, fields, dialogs) | `src/components/ui/`                          |

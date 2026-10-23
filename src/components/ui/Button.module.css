@@ -40,6 +40,15 @@
   background: #a3471f;
   box-shadow: 0 12px 24px -14px rgb(163 71 31 / 0.8);
 }
+.button.outline {
+  background: transparent;
+  border: 1px solid #c2ccbf;
+  color: var(--ink);
+}
+.button.outline:hover {
+  background: #e9ede3;
+  box-shadow: none;
+}
 .button.small {
   padding: 12px 20px;
 }

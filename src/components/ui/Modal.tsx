@@ -1,6 +1,11 @@
 "use client";
 
-import { useEffect, useRef, type ReactNode } from "react";
+import {
+  useEffect,
+  useRef,
+  type KeyboardEventHandler,
+  type ReactNode,
+} from "react";
 import { cx } from "@/lib/utils";
 import styles from "./Modal.module.css";
 
@@ -11,7 +16,9 @@ type ModalProps = {
   /** Id of the heading that names the dialog. */
   labelledBy: string;
   closeLabel: string;
-  wide?: boolean;
+  /** wide for tables, narrow for short forms; default fits reading content. */
+  size?: "narrow" | "wide";
+  onKeyDown?: KeyboardEventHandler<HTMLDialogElement>;
   id?: string;
   className?: string;
   children: ReactNode;
@@ -23,7 +30,8 @@ export function Modal({
   onClose,
   labelledBy,
   closeLabel,
-  wide,
+  size,
+  onKeyDown,
   id,
   className,
   children,
@@ -41,13 +49,16 @@ export function Modal({
     <dialog
       ref={ref}
       id={id}
-      className={cx(styles.modal, wide && styles.wide, className)}
+      className={cx(styles.modal, size && styles[size], className)}
       aria-labelledby={labelledBy}
       onClose={onClose}
+      onKeyDown={onKeyDown}
       onClick={(e) => {
         // A click on the dialog element itself outside its box is a click on the backdrop.
+        // The second click of a double-click lands on the backdrop of a dialog the first click
+        // opened, so it is ignored.
         const dialog = e.currentTarget;
-        if (e.target !== dialog) return;
+        if (e.target !== dialog || e.detail > 1) return;
         const r = dialog.getBoundingClientRect();
         const outside =
           e.clientX < r.left ||

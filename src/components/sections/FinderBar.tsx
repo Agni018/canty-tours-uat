@@ -5,18 +5,17 @@ import { Button } from "@/components/ui/Button";
 import { Select } from "@/components/ui/Select";
 import {
   durationOptions,
-  regionOptions,
   styleOptions,
   type DurationFilter,
-  type RegionFilter,
   type StyleFilter,
 } from "@/data/options";
 import { cx } from "@/lib/utils";
+import { DestinationPicker } from "./DestinationPicker";
 import styles from "./FinderBar.module.css";
 
 /** "Where to / kind of escape / time" bar under the hero. Changes apply on submit. */
 export function FinderBar() {
-  const { fields, setField, findJourneys } = useJourneys();
+  const { fields, setFields, findJourneys } = useJourneys();
 
   return (
     <form
@@ -28,32 +27,27 @@ export function FinderBar() {
         findJourneys();
       }}
     >
-      <label>
-        <span>WHERE TO?</span>
-        <Select
-          name="region"
-          options={regionOptions}
-          value={fields.region}
-          onChange={(e) => setField("region", e.target.value as RegionFilter)}
-        />
-      </label>
-      <label>
-        <span>YOUR KIND OF ESCAPE</span>
+      <DestinationPicker
+        className={styles.field}
+        labelClassName={styles.label}
+      />
+      <label className={styles.field}>
+        <span className={styles.label}>YOUR KIND OF ESCAPE</span>
         <Select
           name="style"
           options={styleOptions}
           value={fields.style}
-          onChange={(e) => setField("style", e.target.value as StyleFilter)}
+          onChange={(e) => setFields({ style: e.target.value as StyleFilter })}
         />
       </label>
-      <label>
-        <span>TIME TO GET AWAY</span>
+      <label className={styles.field}>
+        <span className={styles.label}>TIME TO GET AWAY</span>
         <Select
           name="duration"
           options={durationOptions}
           value={fields.duration}
           onChange={(e) =>
-            setField("duration", e.target.value as DurationFilter)
+            setFields({ duration: e.target.value as DurationFilter })
           }
         />
       </label>

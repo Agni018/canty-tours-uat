@@ -8,7 +8,7 @@ const questions: { question: string; answer: ReactNode }[] = [
   {
     question: "How many days should I spend in Kerala?",
     answer:
-      "Our 4-day route pairs Munnar with Alappuzha. With 5–6 days, you can add Thekkady or spend longer around Kochi and the backwaters. Allow a week for hills, backwaters and the coast, or focus a shorter break on Wayanad. We’ll shape the route around your arrival times and preferred pace.",
+      "Choose a short break focused on one area, or a longer journey combining several stops. Open a journey to compare its day-by-day route, then tell us your arrival times and preferred pace so we can personalise it.",
   },
   {
     question: "When is a good time to visit Kerala?",
