@@ -1,0 +1,179 @@
+/* On load the photo settles from a slight zoom while the copy rises in, line by line. */
+@keyframes settle {
+  from {
+    transform: scale(1.08);
+  }
+}
+@keyframes heroIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+}
+.hero {
+  height: 620px;
+  position: relative;
+  overflow: hidden;
+  color: var(--on-dark);
+  margin: 0 18px;
+  border-radius: 12px;
+}
+.image {
+  height: 100%;
+  object-position: 50% 59%;
+  animation: settle 1.8s var(--ease-out) backwards;
+}
+.shade {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(90deg, #08201bbf, #08201b1f 80%),
+    linear-gradient(0deg, #091913a6, transparent 55%);
+}
+.content {
+  position: absolute;
+  top: 70px;
+  left: max(6.3%, 35px);
+}
+.content > *,
+.location {
+  animation: heroIn var(--dur-reveal) var(--ease-out) backwards;
+}
+.content > :nth-child(1) {
+  animation-delay: 100ms;
+}
+.content > :nth-child(2) {
+  animation-delay: 180ms;
+}
+.content > :nth-child(3) {
+  animation-delay: 260ms;
+}
+.content > :nth-child(4) {
+  animation-delay: 340ms;
+}
+.content > :nth-child(5),
+.location {
+  animation-delay: 420ms;
+}
+.content h1 {
+  font-size: var(--text-display);
+  line-height: 0.96;
+  letter-spacing: -0.03em;
+  margin-bottom: 24px;
+}
+.content h1 em {
+  color: var(--accent-light);
+}
+.content > p:not(.eyebrow) {
+  font-size: var(--text-lg);
+  color: var(--on-dark);
+  max-width: 30rem;
+  margin-bottom: 28px;
+}
+.hero .eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.hero .eyebrow span {
+  width: 28px;
+  height: 1px;
+  background: var(--accent-light);
+}
+.secondary {
+  display: block;
+  width: fit-content;
+  margin-top: 20px;
+  color: var(--on-dark);
+  font-size: var(--text-sm);
+  text-decoration: underline;
+  text-decoration-color: transparent;
+  text-underline-offset: 5px;
+  transition: text-decoration-color var(--dur-fast) var(--ease-out);
+}
+.secondary:hover {
+  text-decoration-color: currentColor;
+}
+.location {
+  position: absolute;
+  right: 5%;
+  bottom: 64px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  font-size: var(--text-label);
+  font-weight: 600;
+  letter-spacing: var(--tracking-label);
+}
+.dot {
+  width: 8px;
+  height: 8px;
+  border: 2px solid var(--accent-light);
+  border-radius: 50%;
+  box-shadow: 0 0 0 6px #ffffff18;
+}
+.location small {
+  display: block;
+  font-size: var(--text-sm);
+  font-weight: 400;
+  letter-spacing: 0;
+  color: var(--on-dark);
+  margin-top: 2px;
+}
+.number {
+  margin-left: 24px;
+  padding-left: 24px;
+  border-left: 1px solid #ffffff66;
+}
+
+@media (max-width: 800px) {
+  .hero {
+    height: 600px;
+    margin: 0 12px;
+  }
+  .content {
+    left: 32px;
+    right: 32px;
+    top: 56px;
+  }
+  .location {
+    right: 30px;
+    bottom: 60px;
+  }
+  .number {
+    display: none;
+  }
+}
+@media (max-width: 540px) {
+  .hero {
+    height: 580px;
+    margin: 0 9px;
+  }
+  .image {
+    object-position: 60%;
+  }
+  .shade {
+    background:
+      linear-gradient(90deg, #092c23bf, #092c2340),
+      linear-gradient(0deg, #092c2380, transparent);
+  }
+  .content {
+    left: 24px;
+    right: 20px;
+    top: 44px;
+  }
+  .content > p:not(.eyebrow) {
+    font-size: var(--text-base);
+  }
+  .desktop {
+    display: none;
+  }
+  .content .cta {
+    padding: 14px 18px;
+  }
+  .location {
+    left: 30px;
+    right: auto;
+    bottom: 48px;
+  }
+}
