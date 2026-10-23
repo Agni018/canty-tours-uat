@@ -1,42 +1,69 @@
-/* On load the photo settles from a slight zoom while the copy rises in, line by line. */
-@keyframes settle {
-  from {
-    transform: scale(1.08);
-  }
-}
+/* The photo fills the first screen; the header, headline and finder sit on top of it. On load
+   the copy rises in, line by line. The photo itself doesn't animate: it is the largest thing on
+   the first screen and should show as soon as it loads. */
 @keyframes heroIn {
   from {
     opacity: 0;
     transform: translateY(20px);
   }
 }
+/* No overflow: hidden or z-index here: the "Where to?" panel must open past the bottom edge
+   and stay above the sections below. The copy and the finder under it are centred together. */
 .hero {
-  height: 620px;
   position: relative;
-  overflow: hidden;
+  display: grid;
+  align-content: center;
+  gap: 40px;
+  /* min-height, not height: with large text or a short screen the hero grows instead of
+     clipping its content. */
+  min-height: 100vh;
+  min-height: 100svh;
+  /* Top padding clears the overlaid header (94px, see Header.module.css). */
+  padding: 134px 0 48px;
   color: var(--on-dark);
-  margin: 0 18px;
-  border-radius: 12px;
 }
-.image {
+.backdrop {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  background: var(--ink); /* shown until the photo loads */
+}
+.backdrop > img {
   height: 100%;
   object-position: 50% 59%;
-  animation: settle 1.8s var(--ease-out) backwards;
 }
-.shade {
+/* Scrim: darker at the top (header), left (headline) and bottom edge so the overlaid text
+   keeps at least 4.5:1 contrast on the brightest parts of the photo. */
+.backdrop::after {
+  content: "";
   position: absolute;
   inset: 0;
   background:
-    linear-gradient(90deg, #08201bbf, #08201b1f 80%),
-    linear-gradient(0deg, #091913a6, transparent 55%);
+    linear-gradient(180deg, #08201ba6, transparent 220px),
+    /* Stays dark to at least 600px, where the copy ends on tablets and landscape phones. */
+    linear-gradient(90deg, #08201bd9, #08201b99 max(45%, 600px), #08201b26),
+    linear-gradient(0deg, #08201b99, transparent 45%);
 }
+/* Positioned so it paints above the (positioned) backdrop. While the finder is in use
+   (FinderBar sets data-active) the copy fades up out of sight but keeps its space, so the hero
+   and photo stay put while the finder moves up over it. Leaving is faster than returning. */
 .content {
-  position: absolute;
-  top: 70px;
-  left: max(6.3%, 35px);
+  position: relative;
+  transition:
+    opacity var(--dur-slow) var(--ease-out),
+    transform var(--dur-slow) var(--ease-out),
+    visibility 0s;
 }
-.content > *,
-.location {
+.hero:has(> [data-active]) .content {
+  opacity: 0;
+  transform: translateY(-24px);
+  visibility: hidden;
+  transition:
+    opacity var(--dur-base) var(--ease-in),
+    transform var(--dur-base) var(--ease-in),
+    visibility 0s linear var(--dur-base);
+}
+.content > * {
   animation: heroIn var(--dur-reveal) var(--ease-out) backwards;
 }
 .content > :nth-child(1) {
@@ -48,27 +75,20 @@
 .content > :nth-child(3) {
   animation-delay: 260ms;
 }
-.content > :nth-child(4) {
-  animation-delay: 340ms;
-}
-.content > :nth-child(5),
-.location {
-  animation-delay: 420ms;
-}
 .content h1 {
   font-size: var(--text-display);
   line-height: 0.96;
   letter-spacing: -0.03em;
   margin-bottom: 24px;
 }
-.content h1 em {
+/* Same upright face as the first line; only the colour sets it apart. */
+.content h1 .accent {
   color: var(--accent-light);
 }
 .content > p:not(.eyebrow) {
   font-size: var(--text-lg);
   color: var(--on-dark);
   max-width: 30rem;
-  margin-bottom: 28px;
 }
 .hero .eyebrow {
   display: flex;
@@ -80,100 +100,33 @@
   height: 1px;
   background: var(--accent-light);
 }
-.secondary {
-  display: block;
-  width: fit-content;
-  margin-top: 20px;
-  color: var(--on-dark);
-  font-size: var(--text-sm);
-  text-decoration: underline;
-  text-decoration-color: transparent;
-  text-underline-offset: 5px;
-  transition: text-decoration-color var(--dur-fast) var(--ease-out);
-}
-.secondary:hover {
-  text-decoration-color: currentColor;
-}
-.location {
-  position: absolute;
-  right: 5%;
-  bottom: 64px;
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  font-size: var(--text-label);
-  font-weight: 600;
-  letter-spacing: var(--tracking-label);
-}
-.dot {
-  width: 8px;
-  height: 8px;
-  border: 2px solid var(--accent-light);
-  border-radius: 50%;
-  box-shadow: 0 0 0 6px #ffffff18;
-}
-.location small {
-  display: block;
-  font-size: var(--text-sm);
-  font-weight: 400;
-  letter-spacing: 0;
-  color: var(--on-dark);
-  margin-top: 2px;
-}
-.number {
-  margin-left: 24px;
-  padding-left: 24px;
-  border-left: 1px solid #ffffff66;
-}
 
 @media (max-width: 800px) {
   .hero {
-    height: 600px;
-    margin: 0 12px;
-  }
-  .content {
-    left: 32px;
-    right: 32px;
-    top: 56px;
-  }
-  .location {
-    right: 30px;
-    bottom: 60px;
-  }
-  .number {
-    display: none;
+    gap: 32px;
+    /* 82px header */
+    padding: 114px 0 32px;
   }
 }
 @media (max-width: 540px) {
   .hero {
-    height: 580px;
-    margin: 0 9px;
+    gap: 28px;
+    /* 76px header */
+    padding: 100px 0 20px;
   }
-  .image {
+  .backdrop > img {
     object-position: 60%;
   }
-  .shade {
+  /* The copy spans the full width on phones, so the whole photo is darkened. */
+  .backdrop::after {
     background:
-      linear-gradient(90deg, #092c23bf, #092c2340),
-      linear-gradient(0deg, #092c2380, transparent);
-  }
-  .content {
-    left: 24px;
-    right: 20px;
-    top: 44px;
+      linear-gradient(180deg, #08201ba6, transparent 160px),
+      linear-gradient(#08201b99, #08201b99);
   }
   .content > p:not(.eyebrow) {
     font-size: var(--text-base);
   }
   .desktop {
     display: none;
-  }
-  .content .cta {
-    padding: 14px 18px;
-  }
-  .location {
-    left: 30px;
-    right: auto;
-    bottom: 48px;
   }
 }

@@ -29,7 +29,7 @@
   height: 24px;
   flex-shrink: 0;
   border-radius: 50%;
-  box-shadow: 0 0 0 1px #dce2d7;
+  box-shadow: 0 0 0 1px var(--line);
 }
 .chevron {
   transition: transform var(--dur-base) var(--ease-out);
@@ -49,9 +49,9 @@
   overscroll-behavior: contain;
   scrollbar-gutter: stable;
   scroll-padding-block: 14px;
-  background: #fff;
-  border: 1px solid #dce2d7;
-  border-radius: 14px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 22px;
   padding: 24px;
   box-shadow: 0 24px 60px -20px rgb(23 56 46 / 0.35);
   z-index: 6;
@@ -105,7 +105,7 @@
   min-width: 0;
   padding: 5px;
   border: 1px solid transparent;
-  border-radius: 10px;
+  border-radius: 14px;
   background: transparent;
   text-align: left;
   transition:
@@ -113,19 +113,20 @@
     border-color var(--dur-base) var(--ease-out);
 }
 .choice:hover {
-  background: #f2f4ed;
-  border-color: #dce2d7;
+  background: color-mix(in srgb, var(--ink) 5%, transparent);
+  border-color: var(--line);
 }
+/* The chosen place uses the brand orange, like the open field in the finder. */
 .choice[aria-pressed="true"] {
-  background: #edf2e7;
-  border-color: #668575;
+  background: color-mix(in srgb, var(--orange) 8%, transparent);
+  border-color: color-mix(in srgb, var(--orange) 50%, transparent);
 }
 .photo {
   display: block;
   position: relative;
   overflow: hidden;
-  border-radius: 6px;
-  background: #e9ede3;
+  border-radius: 10px;
+  background: var(--green-soft);
 }
 .photo img {
   height: auto;
@@ -143,9 +144,9 @@
   width: 24px;
   height: 24px;
   place-items: center;
-  background: var(--ink);
+  background: var(--orange);
   color: #fff;
-  border: 2px solid #fff;
+  border: 2px solid var(--surface);
   border-radius: 50%;
   font-size: var(--text-xs);
 }

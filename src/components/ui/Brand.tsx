@@ -1,13 +1,17 @@
+import Link from "next/link";
 import type { AnchorHTMLAttributes } from "react";
 import { cx } from "@/lib/utils";
 import styles from "./Brand.module.css";
 
-type BrandProps = AnchorHTMLAttributes<HTMLAnchorElement> & { logo?: boolean };
+type BrandProps = AnchorHTMLAttributes<HTMLAnchorElement> & {
+  href: string;
+  logo?: boolean;
+};
 
 /** "Canty / TOURS & TRAVELS" wordmark link, optionally with the mountain logo. */
-export function Brand({ logo, className, ...link }: BrandProps) {
+export function Brand({ logo, className, href, ...link }: BrandProps) {
   return (
-    <a className={cx(styles.brand, className)} {...link}>
+    <Link href={href} className={cx(styles.brand, className)} {...link}>
       {logo && (
         <svg viewBox="0 0 42 42" aria-hidden="true">
           <circle
@@ -30,6 +34,6 @@ export function Brand({ logo, className, ...link }: BrandProps) {
       <span>
         Canty<span className={styles.sub}>TOURS &amp; TRAVELS</span>
       </span>
-    </a>
+    </Link>
   );
 }
