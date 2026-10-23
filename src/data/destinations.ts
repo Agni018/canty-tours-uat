@@ -14,8 +14,8 @@ export const keralaHighlights = [
     name: "Alleppey",
     tagline: "TAKE THE SLOW WAY",
     details: "Alappuzha · Houseboats · Backwater life",
-    image: "kerala.jpg",
-    alt: "A boat travelling through Kerala’s palm-lined backwaters",
+    image: "destinations/alleppey.jpg",
+    alt: "Houseboats and palm-lined shores on the Alleppey backwaters",
   },
   {
     destination: "Varkala",

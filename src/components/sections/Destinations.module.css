@@ -59,10 +59,21 @@
     max-width: none;
   }
 }
+/* Phones: a swipeable row of full-size cards instead of cramped half-width ones. */
 @media (max-width: 540px) {
   .grid {
-    grid-template-columns: 1fr 1fr;
+    display: flex;
     gap: 12px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: 20px;
+    margin-inline: -20px;
+    padding: 0 20px 4px;
+    scrollbar-width: none;
+  }
+  .grid > * {
+    flex: 0 0 82%;
+    scroll-snap-align: start;
   }
   .more {
     grid-template-columns: 1fr 1fr;

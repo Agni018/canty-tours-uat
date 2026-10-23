@@ -102,11 +102,7 @@
   }
 }
 @media (max-width: 540px) {
-  .card:first-child {
-    grid-column: 1/-1;
-    height: 280px;
-  }
   .card {
-    height: 250px;
+    height: 320px;
   }
 }
