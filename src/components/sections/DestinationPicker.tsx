@@ -271,7 +271,7 @@ export function DestinationPicker({
                   <Icon name="check" />
                 </span>
               </span>
-              <span className={styles.name}>{p.name}</span>
+              <span className={styles.name}>{p.tileName ?? p.name}</span>
             </button>
           ))}
         </div>

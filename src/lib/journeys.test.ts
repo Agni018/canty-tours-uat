@@ -26,7 +26,7 @@ const byId = (id: string) => tours.find((t) => t.id === id)!;
 describe("filterTours", () => {
   it("shows Kerala routes by default, including Kerala & Tamil Nadu ones", () => {
     const kerala = ids({});
-    expect(kerala).toHaveLength(11);
+    expect(kerala).toHaveLength(18);
     expect(kerala).toContain("south-temple-trail");
   });
   it("includes the Kerala routes under South India", () => {
@@ -88,6 +88,7 @@ describe("filters in the address", () => {
 describe("labels", () => {
   it("shows place names rather than filter values", () => {
     expect(destinationLabel("Alappuzha")).toBe("Alleppey");
+    expect(destinationLabel("Trivandrum")).toBe("Thiruvananthapuram");
     expect(destinationLabel("Rajasthan")).toBe("Rajasthan");
     expect(
       resultsSummary(2, {

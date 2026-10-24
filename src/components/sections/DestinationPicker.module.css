@@ -153,11 +153,13 @@
 .choice[aria-pressed="true"] .check {
   display: grid;
 }
+/* Long names break at their soft hyphen (tileName); break-word only guards the narrowest phones. */
 .name {
   display: block;
   font-size: var(--text-sm);
   font-weight: 600;
   padding: 8px 4px 4px;
+  overflow-wrap: break-word;
 }
 .regions {
   border-top: 1px solid var(--line);

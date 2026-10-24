@@ -67,9 +67,11 @@ export function PrivacyDialog() {
       </details>
       <h3>Journey ideas</h3>
       <p>
-        Kerala and Tamil Nadu itineraries are concise, independently worded
-        summaries of published Paradise Holidays routes, reviewed on 19 October
-        2026.
+        Itineraries with a source listed below are concise, independently worded
+        summaries of published Paradise Holidays routes, reviewed in October
+        2026. Other routes are original suggestions, with Kerala details checked
+        against Kerala Tourism, district tourism and forest department
+        information.
       </p>
       <details className={styles.credits}>
         <summary>Itinerary sources</summary>
