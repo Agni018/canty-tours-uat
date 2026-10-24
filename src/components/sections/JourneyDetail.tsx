@@ -1,13 +1,8 @@
 import Link from "next/link";
 import { TourCard } from "@/components/cards/TourCard";
 import { Icon } from "@/components/ui/Icon";
-import { tours, type Tour } from "@/data/tours";
-import {
-  durationText,
-  highlightList,
-  regionLabel,
-  relatedTours,
-} from "@/lib/journeys";
+import type { Tour } from "@/data/tours";
+import { durationText, highlightList, regionLabel } from "@/lib/journeys";
 import { asset, cx } from "@/lib/utils";
 import { EnquiryForm } from "./EnquiryForm";
 import styles from "./JourneyDetail.module.css";
@@ -31,11 +26,17 @@ const steps = [
   },
 ];
 
+type JourneyDetailProps = {
+  tour: Tour;
+  /** Similar journeys suggested at the end of the page. */
+  related: Tour[];
+};
+
 /**
  * A journey's page: photo header, overview, highlights, the day-by-day route and how planning
  * works, with the enquiry form beside it (below it on narrow screens) and similar journeys.
  */
-export function JourneyDetail({ tour: t }: { tour: Tour }) {
+export function JourneyDetail({ tour: t, related }: JourneyDetailProps) {
   const styleList = [t.style, ...(t.styles ?? [])];
 
   return (
@@ -150,7 +151,7 @@ export function JourneyDetail({ tour: t }: { tour: Tour }) {
         <div className="wrap">
           <h2 id="more-title">More journeys like this</h2>
           <div className={styles.moreGrid}>
-            {relatedTours(tours, t).map((r) => (
+            {related.map((r) => (
               <TourCard key={r.id} tour={r} />
             ))}
           </div>

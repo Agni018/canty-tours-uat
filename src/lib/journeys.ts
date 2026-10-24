@@ -3,14 +3,13 @@
 import {
   durationOptions,
   regionOptions,
-  styleOptions,
   type DurationFilter,
   type RegionFilter,
   type SelectOption,
   type StyleFilter,
 } from "../data/options";
-import { places, placeValue } from "../data/places";
-import type { Tour } from "../data/tours";
+import { placeValue, type Place } from "../data/places";
+import type { Tour, TravelStyle } from "../data/tours";
 
 export type Filters = {
   region: RegionFilter;
@@ -37,15 +36,23 @@ export function matchesRegion(t: Tour, region: RegionFilter): boolean {
   );
 }
 
+/** Names typed in the CMS match whatever their capitals or surrounding spaces. */
+const sameName = (a: string, b: string) =>
+  a.trim().toLowerCase() === b.trim().toLowerCase();
+
+const visits = (t: Tour, destination: string) =>
+  sameName(t.destination, destination) ||
+  t.places.some((p) => sameName(p, destination));
+
 /** "Houseboat" matches any route with a houseboat stay or cruise; other places match by name. */
 export function matchesDestination(t: Tour, destination: string): boolean {
   if (!destination) return true;
-  if (destination === "Houseboat")
+  if (sameName(destination, "Houseboat"))
     return (
-      (t.experiences ?? []).includes("Houseboat") ||
+      (t.experiences ?? []).some((e) => sameName(e, "Houseboat")) ||
       t.itinerary.some((day) => /houseboat/i.test(day))
     );
-  return t.destination === destination || t.places.includes(destination);
+  return visits(t, destination);
 }
 
 export function filterTours(tours: Tour[], f: Filters): Tour[] {
@@ -63,17 +70,20 @@ export function filterTours(tours: Tour[], f: Filters): Tour[] {
 
 const optionValues = (options: SelectOption[]) =>
   options.map((o) => (typeof o === "string" ? o : o.value));
-const allowed: Record<Exclude<keyof Filters, "destination">, string[]> = {
-  region: optionValues(regionOptions),
-  style: optionValues(styleOptions),
-  duration: optionValues(durationOptions),
-};
 
 /**
  * Filters named in a page address (?region=North&style=Family), so filtered results can be
  * shared and survive a reload. Unknown keys and values are ignored: the address is untrusted.
  */
-export function filtersFromQuery(search: string): Partial<Filters> {
+export function filtersFromQuery(
+  search: string,
+  styles: TravelStyle[],
+): Partial<Filters> {
+  const allowed: Record<Exclude<keyof Filters, "destination">, string[]> = {
+    region: optionValues(regionOptions),
+    style: ["all", ...styles],
+    duration: optionValues(durationOptions),
+  };
   const q = new URLSearchParams(search);
   const found: Partial<Filters> = {};
   for (const [key, values] of Object.entries(allowed)) {
@@ -104,9 +114,7 @@ export function tourVisiting(
   tours: Tour[],
   destination: string,
 ): Tour | undefined {
-  return tours.find(
-    (t) => t.destination === destination || t.places.includes(destination),
-  );
+  return tours.find((t) => visits(t, destination));
 }
 
 /** True when the grid shows the Kerala collection (Kerala or South India). */
@@ -115,7 +123,7 @@ export function isKeralaView(region: RegionFilter): boolean {
 }
 
 /** Display name for a filter value: "Alappuzha" shows as "Alleppey". */
-export function destinationLabel(destination: string): string {
+export function destinationLabel(places: Place[], destination: string): string {
   return places.find((p) => placeValue(p) === destination)?.name ?? destination;
 }
 
@@ -126,7 +134,11 @@ export function journeysEyebrow(region: RegionFilter): string {
 }
 
 /** The line above the grid, e.g. "6 journey ideas in Kerala · Family · Select up to 3 to compare". */
-export function resultsSummary(count: number, f: Filters): string {
+export function resultsSummary(
+  count: number,
+  f: Filters,
+  places: Place[],
+): string {
   const scope =
     f.region === "all"
       ? "across India"
@@ -135,7 +147,9 @@ export function resultsSummary(count: number, f: Filters): string {
         : `in ${f.region} India`;
   const parts = [
     scope +
-      (f.destination ? ` · Including ${destinationLabel(f.destination)}` : ""),
+      (f.destination
+        ? ` · Including ${destinationLabel(places, f.destination)}`
+        : ""),
   ];
   if (f.style !== "all") parts.push(f.style);
   if (f.duration !== "all")

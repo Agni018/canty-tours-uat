@@ -23,7 +23,7 @@ import styles from "./FinderBar.module.css";
  * before the release, and the click that opens the list would be lost.
  */
 export function FinderBar() {
-  const { fields, setFields, findJourneys } = useJourneys();
+  const { fields, setFields, findJourneys, travelStyles } = useJourneys();
   const form = useRef<HTMLFormElement>(null);
   // How far the finder moves up while in use; null when not in use.
   const [lift, setLift] = useState<number | null>(null);
@@ -87,7 +87,7 @@ export function FinderBar() {
       <Dropdown
         id="finder-style"
         label="YOUR KIND OF ESCAPE"
-        options={styleOptions}
+        options={styleOptions(travelStyles)}
         value={fields.style}
         onChange={(style) => setFields({ style: style as StyleFilter })}
         className={styles.field}

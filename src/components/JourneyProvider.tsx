@@ -9,7 +9,7 @@ import {
   type ReactNode,
 } from "react";
 import type { RegionFilter } from "@/data/options";
-import { tours } from "@/data/tours";
+import type { Content } from "@/lib/content";
 import {
   defaultFilters,
   filterTours,
@@ -25,7 +25,7 @@ export type TripRequest = { destination: string };
 
 const MAX_COMPARE = 3;
 
-function useJourneyState() {
+function useJourneyState({ tours, places, travelStyles }: Content) {
   // `fields` is what the finder shows; `filters` is what the grid shows. Picking in the finder
   // only changes `fields` until the visitor presses "Find my journey" or another filter control.
   const [{ fields, filters }, setFilterState] = useState({
@@ -62,7 +62,7 @@ function useJourneyState() {
   // The grid's filters live in the address too (?style=Family), so a filtered view can be
   // shared, reloaded or returned to with Back. Read once on arrival, then kept in step.
   useEffect(() => {
-    const fromUrl = filtersFromQuery(location.search);
+    const fromUrl = filtersFromQuery(location.search, travelStyles);
     if (Object.keys(fromUrl).length) applyFilters(fromUrl);
   }, []);
   useEffect(() => {
@@ -76,6 +76,10 @@ function useJourneyState() {
   }, [filters]);
 
   return {
+    /** All journeys, "Where to?" places and travel styles, in display order. */
+    tours,
+    places,
+    travelStyles,
     fields,
     filters,
     /** Tours currently shown in the grid, in order. */
@@ -137,9 +141,17 @@ const JourneyContext = createContext<ReturnType<typeof useJourneyState> | null>(
   null,
 );
 
-/** Holds the site's shared state: filters, comparison, open dialogs, trip requests and toast. */
-export function JourneyProvider({ children }: { children: ReactNode }) {
-  return <JourneyContext value={useJourneyState()}>{children}</JourneyContext>;
+type JourneyProviderProps = {
+  /** Read from content/ at build time by the root layout. */
+  content: Content;
+  children: ReactNode;
+};
+
+/** Holds the site's content and shared state: filters, comparison, dialogs, trip requests, toast. */
+export function JourneyProvider({ content, children }: JourneyProviderProps) {
+  return (
+    <JourneyContext value={useJourneyState(content)}>{children}</JourneyContext>
+  );
 }
 
 export function useJourneys() {

@@ -11,6 +11,10 @@ filterable journey grid, a compare dialog, a trip planner) and one page per jour
 day-by-day route and an enquiry form. Enquiries open WhatsApp with a prepared message. No backend,
 no database, no stored personal data.
 
+Journeys, "Where to?" places and travel styles are content the business edits itself in Pages CMS
+(`.pages.yml`): JSON files in `content/`, read at build time by `src/lib/content.ts`. Every save
+there is a commit to `main` that deploys.
+
 ## Stack
 
 - Next.js (App Router) + React + TypeScript (strict), exported as static HTML (`output: "export"`)
@@ -34,12 +38,16 @@ npm run check    # format check + tests + build — run before every commit
 
 | Change                                | Place                                                 |
 | ------------------------------------- | ----------------------------------------------------- |
-| Tour content                          | `src/data/tours.ts`                                   |
+| Journeys (content)                    | `content/journeys/<page-address>.json`                |
+| "Where to?" places + credits          | `content/places/*.json`                               |
+| Travel styles (the style filter)      | `content/styles/*.json`                               |
+| Editing forms for `content/`          | `.pages.yml`                                          |
+| Content types                         | `src/data/tours.ts`, `src/data/places.ts`             |
+| Reading and checking content          | `src/lib/content.ts` + `content.test.ts`              |
 | Journey pages (one per tour)          | `src/app/journeys/[id]/page.tsx`, `JourneyDetail.tsx` |
 | Testimonials (real ones only)         | `src/data/testimonials.ts`                            |
-| Dropdown options, filter types        | `src/data/options.ts`                                 |
+| Dropdown options, regions, durations  | `src/data/options.ts`                                 |
 | Destination cards                     | `src/data/destinations.ts`                            |
-| "Where to?" picker places + credits   | `src/data/places.ts`                                  |
 | Contact-form country codes            | `src/data/countryCodes.ts`                            |
 | Phone / WhatsApp                      | `src/data/site.ts`                                    |
 | Filtering, labels, message text       | `src/lib/journeys.ts` + `journeys.test.ts`            |
@@ -47,7 +55,7 @@ npm run check    # format check + tests + build — run before every commit
 | Cards                                 | `src/components/cards/`                               |
 | Page sections                         | `src/components/sections/`                            |
 | Dialogs, bars, toasts                 | `src/components/overlays/`                            |
-| Shared page state                     | `src/components/JourneyProvider.tsx`                  |
+| Content + shared page state           | `src/components/JourneyProvider.tsx`                  |
 | Photos                                | `public/assets/` (~1200px wide JPEG, <300 KB)         |
 
 ## Component rules
@@ -60,7 +68,14 @@ npm run check    # format check + tests + build — run before every commit
 - One component per file, named export, PascalCase file name, props typed with a `type`.
 - Add `"use client"` only to components that use state, effects or event handlers.
 - Content belongs in `src/data/`, not hard-coded in components, when it is a list or repeats.
+- Components get journeys, places and travel styles from `useJourneys()` (client) or
+  `getContent()` (server); never import `src/lib/content.ts` (it reads files) into a client
+  component.
+- A new field on journeys, places or styles goes in three places: the type in `src/data/`,
+  `src/lib/content.ts`, and `.pages.yml`. Pages CMS deletes keys `.pages.yml` doesn't list.
 - Logic without React (filtering, formatting, message building) goes in `src/lib/` with a test.
+  Tests use their own sample data, not the entries in `content/`: the business edits those, and
+  a failing test blocks its deploy.
 - Use `asset("file.jpg")` for image URLs (adds the GitHub Pages base path). Use `<img>`, not
   `next/image` (image optimisation doesn't work in a static export).
 - Keep the static export working: no API routes, server actions, middleware, cookies or headers.
@@ -115,7 +130,8 @@ npm run check    # format check + tests + build — run before every commit
 - Prices are "on request". Never invent prices, reviews, testimonials, awards or guarantees.
 - Routes are sample itineraries; keep the "confirmed in your quote" disclaimers.
 - The trip form must not send or store data anywhere except the visitor's own WhatsApp message.
-- Every image needs meaningful `alt` text; credit new photos in the README and privacy dialog.
+- Every image needs meaningful `alt` text. Credit a third-party photo in its `content/` entry's
+  `credit` (the privacy dialog lists those itself); other photos in the README and privacy dialog.
 
 ## Before you finish
 

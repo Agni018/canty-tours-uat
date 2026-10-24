@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { places, placeValue } from "../data/places";
-import { tours } from "../data/tours";
+import type { Place } from "../data/places";
+import type { Tour } from "../data/tours";
 import {
   defaultFilters,
   destinationLabel,
@@ -19,62 +19,120 @@ import {
   type Filters,
 } from "./journeys";
 
+// Made-up content, so the tests don't change when the business edits its journeys in the CMS.
+const tour = (id: string, t: Partial<Tour> = {}): Tour => ({
+  id,
+  name: `Journey ${id}`,
+  destination: "Kerala",
+  region: "Kerala",
+  style: "Family",
+  days: 3,
+  nights: 2,
+  image: "destinations/test.jpg",
+  alt: "",
+  places: [],
+  route: "Kochi → Kochi",
+  description: "",
+  pace: "",
+  ideal: "",
+  highlights: "",
+  itinerary: ["Arrive."],
+  ...t,
+});
+
+const tours = [
+  tour("munnar", {
+    places: ["Kochi", "Munnar"],
+    style: "Mountains",
+    styles: ["Honeymoon"],
+    days: 4,
+    nights: 3,
+  }),
+  tour("houseboat", {
+    name: "An Overnight on Alleppey's Waterways",
+    style: "Slow escapes",
+    days: 2,
+    nights: 1,
+    places: ["Kochi", "Alappuzha"],
+    route: "Kochi → Alappuzha → Kochi",
+    highlights: "Backwater cruising, Overnight houseboat ,",
+    itinerary: ["Board a houseboat at noon.", "Return to Kochi."],
+  }),
+  tour("kollam", { places: ["Kollam"], experiences: ["Houseboat"] }),
+  tour("temples", {
+    destination: "Kerala & Tamil Nadu",
+    region: "South",
+    regions: ["Kerala", "South"],
+    style: "Culture & heritage",
+    days: 8,
+    nights: 7,
+  }),
+  tour("goa", { destination: "Goa", region: "West", style: "Beaches" }),
+  tour("ladakh", { destination: "Ladakh", region: "North", days: 7 }),
+];
+
+const place = (name: string, p: Partial<Place> = {}): Place => ({
+  name,
+  image: "x.jpg",
+  thumb: "x.jpg",
+  alt: "",
+  ...p,
+});
+const places = [place("Munnar"), place("Alleppey", { value: "Alappuzha" })];
+const styles = ["Family", "Honeymoon", "Mountains"];
+
 const ids = (f: Partial<Filters>) =>
   filterTours(tours, { ...defaultFilters, ...f }).map((t) => t.id);
 const byId = (id: string) => tours.find((t) => t.id === id)!;
 
 describe("filterTours", () => {
   it("shows Kerala routes by default, including Kerala & Tamil Nadu ones", () => {
-    const kerala = ids({});
-    expect(kerala).toHaveLength(18);
-    expect(kerala).toContain("south-temple-trail");
+    expect(ids({})).toEqual(["munnar", "houseboat", "kollam", "temples"]);
   });
   it("includes the Kerala routes under South India", () => {
     expect(ids({ region: "South" })).toEqual(ids({ region: "Kerala" }));
   });
-  it("finds at least one route for every place in the picker", () => {
-    for (const p of places) {
-      const found = ids({
-        region: p.region ?? "Kerala",
-        destination: placeValue(p),
-      });
-      expect(found, p.name).not.toHaveLength(0);
-    }
+  it("matches places by name, whatever their capitals or spaces", () => {
+    expect(ids({ destination: "Munnar" })).toEqual(["munnar"]);
+    expect(ids({ destination: " munnar " })).toEqual(["munnar"]);
+    expect(ids({ region: "all", destination: "Goa" })).toEqual(["goa"]);
   });
   it("matches Houseboat through stays, cruises and experiences", () => {
-    const found = ids({ destination: "Houseboat" });
-    expect(found).toContain("kerala-houseboat");
-    expect(found).toContain("kerala-kollam");
+    expect(ids({ destination: "Houseboat" })).toEqual(["houseboat", "kollam"]);
   });
   it("matches extra styles as well as the main one", () => {
-    for (const id of ids({ region: "all", style: "Honeymoon" })) {
-      const t = byId(id);
-      expect([t.style, ...(t.styles ?? [])]).toContain("Honeymoon");
-    }
+    expect(ids({ region: "all", style: "Honeymoon" })).toEqual(["munnar"]);
+    expect(ids({ region: "all", style: "Mountains" })).toEqual(["munnar"]);
   });
   it("splits durations at 5 days", () => {
-    expect(
-      ids({ region: "all", duration: "short" }).every(
-        (id) => byId(id).days <= 5,
-      ),
-    ).toBe(true);
-    expect(
-      ids({ region: "all", duration: "long" }).every(
-        (id) => byId(id).days >= 6,
-      ),
-    ).toBe(true);
+    expect(ids({ region: "all", duration: "short" })).toEqual([
+      "munnar",
+      "houseboat",
+      "kollam",
+      "goa",
+    ]);
+    expect(ids({ region: "all", duration: "long" })).toEqual([
+      "temples",
+      "ladakh",
+    ]);
   });
 });
 
 describe("filters in the address", () => {
   it("reads known filters and ignores anything else", () => {
     expect(
-      filtersFromQuery("?region=North&style=Family&duration=nope&x=1"),
+      filtersFromQuery("?region=North&style=Family&duration=nope&x=1", styles),
     ).toEqual({ region: "North", style: "Family" });
-    expect(filtersFromQuery("?destination=%20Munnar%20")).toEqual({
+    expect(filtersFromQuery("?destination=%20Munnar%20", styles)).toEqual({
       destination: "Munnar",
     });
-    expect(filtersFromQuery("")).toEqual({});
+    expect(filtersFromQuery("", styles)).toEqual({});
+  });
+  it("accepts only the travel styles in the content", () => {
+    expect(filtersFromQuery("?style=Wildlife", styles)).toEqual({});
+    expect(filtersFromQuery("?style=Wildlife", ["Wildlife"])).toEqual({
+      style: "Wildlife",
+    });
   });
   it("writes only what differs from the default, keeping other parameters", () => {
     expect(filtersToQuery(defaultFilters, "")).toBe("");
@@ -87,15 +145,14 @@ describe("filters in the address", () => {
 
 describe("labels", () => {
   it("shows place names rather than filter values", () => {
-    expect(destinationLabel("Alappuzha")).toBe("Alleppey");
-    expect(destinationLabel("Trivandrum")).toBe("Thiruvananthapuram");
-    expect(destinationLabel("Rajasthan")).toBe("Rajasthan");
+    expect(destinationLabel(places, "Alappuzha")).toBe("Alleppey");
+    expect(destinationLabel(places, "Rajasthan")).toBe("Rajasthan");
     expect(
-      resultsSummary(2, {
-        ...defaultFilters,
-        destination: "Alappuzha",
-        style: "Family",
-      }),
+      resultsSummary(
+        2,
+        { ...defaultFilters, destination: "Alappuzha", style: "Family" },
+        places,
+      ),
     ).toBe(
       "2 journey ideas in Kerala · Including Alleppey · Family · Select up to 3 to compare",
     );
@@ -106,31 +163,29 @@ describe("labels", () => {
     expect(journeysEyebrow("all")).toBe("YOUR NEXT INDIA STORY STARTS HERE");
   });
   it("uses the singular for one night", () => {
-    expect(durationText(byId("kerala-houseboat"))).toBe("2 days / 1 night");
-    expect(durationText(byId("goa"))).toBe("4 days / 3 nights");
+    expect(durationText(byId("houseboat"))).toBe("2 days / 1 night");
+    expect(durationText(byId("munnar"))).toBe("4 days / 3 nights");
   });
 });
 
 describe("journey pages", () => {
   it("lists the highlights one by one", () => {
-    expect(highlightList(byId("kerala-waterfalls-hills"))).toEqual([
-      "Waterfalls",
-      "Tea country",
-      "Periyar",
-      "Houseboat",
+    expect(highlightList(byId("houseboat"))).toEqual([
+      "Backwater cruising",
+      "Overnight houseboat",
     ]);
   });
-  it("suggests other journeys from the same region, never the journey itself", () => {
-    const t = byId("kerala-houseboat");
-    const related = relatedTours(tours, t);
-    expect(related).toHaveLength(3);
-    expect(related.map((r) => r.id)).not.toContain(t.id);
-    expect(related.every((r) => r.region === "Kerala")).toBe(true);
+  it("suggests journeys from the same region first, never the journey itself", () => {
+    expect(relatedTours(tours, byId("houseboat")).map((t) => t.id)).toEqual([
+      "munnar",
+      "kollam",
+      "temples",
+    ]);
   });
 });
 
 describe("WhatsApp messages", () => {
-  const houseboat = byId("kerala-houseboat");
+  const houseboat = byId("houseboat");
   it("asks about one journey, with its link when there is one", () => {
     expect(
       journeyMessage(

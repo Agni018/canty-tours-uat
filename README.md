@@ -15,17 +15,22 @@ npm install      # once
 npm run dev      # http://localhost:3000, reloads on save
 ```
 
-| Command          | What it does                                           |
-| ---------------- | ------------------------------------------------------ |
-| `npm run dev`    | Local development server                               |
-| `npm test`       | Unit tests (Vitest) for filtering and the enquiry text |
-| `npm run format` | Format every file with Prettier                        |
-| `npm run build`  | Type-check and export the static site to `out/`        |
-| `npm run check`  | Format check + tests + build; the same checks CI runs  |
+| Command          | What it does                                          |
+| ---------------- | ----------------------------------------------------- |
+| `npm run dev`    | Local development server                              |
+| `npm test`       | Unit tests (Vitest): filtering, content, enquiry text |
+| `npm run format` | Format every file with Prettier                       |
+| `npm run build`  | Type-check and export the static site to `out/`       |
+| `npm run check`  | Format check + tests + build; the same checks CI runs |
 
 ## Project structure
 
 ```
+content/                Edited in Pages CMS (see below), one JSON file per entry:
+  journeys/             Sample journeys; the file name is the page address /journeys/<name>/
+  places/               "Where to?" picker places
+  styles/               Travel styles (the style filter)
+.pages.yml              Pages CMS set-up: the editing forms for everything in content/
 src/
   app/                  Next.js entry: layout (header, footer, fonts, metadata), home page,
                         journeys/[id]/ (one page per journey), global CSS, favicon
@@ -35,11 +40,13 @@ src/
     cards/              TourCard, DestinationCard, IndiaCard
     sections/           One component per page section (Header, Hero, FinderBar, Journeys, …)
     overlays/           Dialogs, compare bar and toast
-    JourneyProvider.tsx Shared state: filters (kept in the address), comparison, dialogs
-  data/                 Content: tours, destinations, dropdown options, contact details,
-                        testimonials (real ones only; the section is hidden while empty)
-  lib/                  Pure logic (filtering, labels, WhatsApp text) and its tests
-public/assets/          Photos, served as /assets/…
+    JourneyProvider.tsx Content plus shared state: filters (kept in the address), comparison,
+                        dialogs
+  data/                 Types for the content above; destinations, dropdown options, contact
+                        details, testimonials (real ones only; the section is hidden while empty)
+  lib/                  Pure logic (filtering, labels, WhatsApp text), the content reader
+                        (content.ts) and their tests
+public/assets/          Photos, served as /assets/…; uploads from Pages CMS land here too
 ```
 
 Each component keeps its styles next to it in a `*.module.css` file (CSS Modules, scoped to that
@@ -48,16 +55,45 @@ utility classes (`wrap`, `section`, `eyebrow`, `light`, `fineprint`).
 
 ## Common edits
 
-- **Add or change a tour:** edit `src/data/tours.ts`. Put its photo in `public/assets/` (about
-  1000–1200px wide) and set `image` to its path there, e.g. `"destinations/kollam.jpg"`.
-  Record the published itinerary it was checked against in `source`.
-- **Add a place to the "Where to?" picker:** `src/data/places.ts` (photo in
-  `public/assets/destinations/`, with its credit). Make sure at least one tour visits it; a
-  unit test checks this.
+- **Journeys, "Where to?" places and travel styles:** in Pages CMS (next section), or by editing
+  the JSON files in `content/` directly. New journeys appear in the grid, get their own page and
+  join the filters; a new travel style becomes a filter chip and a choice in "Your kind of escape".
 - **Change dropdown options:** `src/data/options.ts`; contact-form country codes:
-  `src/data/countryCodes.ts`.
+  `src/data/countryCodes.ts`. Regions are fixed in code, because the region tabs and the "South
+  India includes Kerala" rule depend on them.
 - **Change destination cards:** `src/data/destinations.ts`.
 - **Change the phone/WhatsApp number:** `src/data/site.ts`.
+
+## Editing content in Pages CMS
+
+[Pages CMS](https://pagescms.org) is a free online editor for content kept in a GitHub repository.
+It shows the files in `content/` as forms (journeys, "Where to?" places, travel styles) and lets
+photos be uploaded. Saving commits the change to the repository, and the usual deploy publishes it
+about two minutes later. There is no server or database; `.pages.yml` describes the forms.
+
+One-time set-up, by the repository owner:
+
+1. Merge this into `main`.
+2. Go to [app.pagescms.org](https://app.pagescms.org), sign in with GitHub and install the Pages CMS
+   GitHub App on the account that owns this repository, giving it access to this repository.
+3. Open the repository (branch `main`) in Pages CMS.
+4. Invite the people who will edit content by email (Collaborators). They sign in with the link
+   they receive and don't need a GitHub account. They can change content and photos, not the
+   set-up.
+
+Good to know:
+
+- A journey's file name, and so its page address, comes from its name when it is created and
+  can't be renamed in the editor, so links shared on WhatsApp keep working.
+- A journey appears under a "Where to?" photo when its **Places on the route** include that
+  place's name (or its "Matches journeys listing" value). Capitals don't matter.
+- An entry missing a required field is left out of the site instead of stopping the update. The
+  build log of the deploy (GitHub → Actions) lists anything left out or unmatched, under
+  `Content:`.
+- Pages CMS removes keys it doesn't know about when it saves a file, so a new field must be added
+  to `.pages.yml` as well as to the types in `src/data/` and to `src/lib/content.ts`.
+- `npm run dev` makes its list of journey pages when it starts: restart it to open the page of a
+  journey added since. Everything else updates on reload.
 
 ## Deploy
 
@@ -80,8 +116,8 @@ Most Kerala and Tamil Nadu itineraries are original, condensed day-by-day summar
 Paradise Holidays routes, reviewed on 19 October 2026 (the Ponmudi and Bekal–Kannur routes on
 24 October 2026). They keep the published route order, key activities and optional or
 time-dependent qualifications; no prices, guarantees, hotel, meal or transport inclusions are
-transferred. Each tour's reference is its `source` in `src/data/tours.ts`, and the list is shown in
-the site's privacy dialog.
+transferred. Each tour's reference is its `source` in its `content/journeys/` file, and the list
+is shown in the site's privacy dialog.
 
 Five Kerala routes added on 24 October 2026 have no published equivalent and are original
 suggestions: Fort Kochi and Cherai, Munnar and Chinnar, Nelliyampathy and Silent Valley, Thrissur,
@@ -113,7 +149,10 @@ Original layout and copy; no competitor branding or proprietary descriptions cop
 ### Photos
 
 "Where to?" picker photos are stored in `public/assets/destinations/`, resized to 960–1200px wide
-with camera metadata removed, plus a 480px copy in `public/assets/thumbs/` for the picker. Most come from Wikimedia Commons under CC BY-SA, CC BY or public domain;
+with camera metadata removed, plus a 480px copy in `public/assets/thumbs/` for the picker. A place
+added in Pages CMS uses its main photo in the picker until a 480px copy with the same file name is
+added to `public/assets/thumbs/`. Photo credits entered in Pages CMS are listed in the privacy
+dialog automatically. Most come from Wikimedia Commons under CC BY-SA, CC BY or public domain;
 photographer, licence and source page for each are in `src/data/places.ts` and shown in the
 privacy dialog, as the licences require.
 

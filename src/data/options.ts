@@ -8,15 +8,6 @@ export type DurationFilter = "all" | "short" | "long";
 /** Option for the Select component; a plain string is both value and label. */
 export type SelectOption = string | { value: string; label: string };
 
-export const travelStyles: TravelStyle[] = [
-  "Family",
-  "Honeymoon",
-  "Slow escapes",
-  "Culture & heritage",
-  "Mountains",
-  "Beaches",
-];
-
 export const regionOptions: SelectOption[] = [
   { value: "Kerala", label: "Kerala — our first love" },
   { value: "all", label: "Anywhere in India" },
@@ -26,9 +17,10 @@ export const regionOptions: SelectOption[] = [
   { value: "Northeast", label: "Northeast India" },
 ];
 
-export const styleOptions: SelectOption[] = [
+/** The style dropdown: "A little of everything", then the travel styles from content/styles. */
+export const styleOptions = (styles: TravelStyle[]): SelectOption[] => [
   { value: "all", label: "A little of everything" },
-  ...travelStyles,
+  ...styles,
 ];
 
 export const durationOptions: SelectOption[] = [

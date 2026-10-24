@@ -10,7 +10,7 @@ import { useJourneys } from "@/components/JourneyProvider";
 import { Chip } from "@/components/ui/Chip";
 import { Icon } from "@/components/ui/Icon";
 import { regionOptions, type RegionFilter } from "@/data/options";
-import { places, placeValue, type Place } from "@/data/places";
+import { placeValue, type Place } from "@/data/places";
 import { destinationLabel } from "@/lib/journeys";
 import { asset, cx } from "@/lib/utils";
 import styles from "./DestinationPicker.module.css";
@@ -20,9 +20,6 @@ type DestinationPickerProps = {
   className?: string;
   labelClassName?: string;
 };
-
-/** 480px copy of a place photo (public/assets/thumbs/): the picker shows them at about 150px. */
-const thumb = (image: string) => asset(`thumbs/${image.split("/").pop()}`);
 
 const regionChoiceLabel = (value: string) => {
   if (value === "Kerala") return "All Kerala";
@@ -41,7 +38,7 @@ export function DestinationPicker({
   className,
   labelClassName,
 }: DestinationPickerProps) {
-  const { fields, setFields } = useJourneys();
+  const { fields, setFields, places } = useJourneys();
   const [open, setOpen] = useState(false);
   const focusChoiceOnOpen = useRef(false);
   const root = useRef<HTMLDivElement>(null);
@@ -51,7 +48,7 @@ export function DestinationPicker({
 
   const place = places.find((p) => placeValue(p) === fields.destination);
   const label = fields.destination
-    ? destinationLabel(fields.destination)
+    ? destinationLabel(places, fields.destination)
     : (
         regionOptions.find(
           (o) => typeof o !== "string" && o.value === fields.region,
@@ -207,7 +204,7 @@ export function DestinationPicker({
         {place && (
           <img
             className={styles.thumb}
-            src={thumb(place.image)}
+            src={asset(place.thumb)}
             alt=""
             width={24}
             height={24}
@@ -259,7 +256,7 @@ export function DestinationPicker({
             >
               <span className={styles.photo}>
                 <img
-                  src={thumb(p.image)}
+                  src={asset(p.thumb)}
                   alt=""
                   loading="lazy"
                   decoding="async"

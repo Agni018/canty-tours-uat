@@ -8,7 +8,6 @@ import { Chip } from "@/components/ui/Chip";
 import { Icon } from "@/components/ui/Icon";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { TextButton } from "@/components/ui/TextButton";
-import { travelStyles } from "@/data/options";
 import { whatsappLink } from "@/data/site";
 import {
   destinationLabel,
@@ -22,6 +21,8 @@ import styles from "./Journeys.module.css";
 /** Filterable journey grid with collection tabs, style chips and the compare checkboxes. */
 export function Journeys() {
   const {
+    places,
+    travelStyles,
     filters,
     matches,
     applyFilters,
@@ -34,7 +35,7 @@ export function Journeys() {
   } = useJourneys();
   const keralaView = isKeralaView(filters.region);
   const place = filters.destination
-    ? destinationLabel(filters.destination)
+    ? destinationLabel(places, filters.destination)
     : "";
   // A new key rebuilds the grid so the cards' entrance animation plays again.
   const gridKey = [...Object.values(filters), revealCount].join("|");
@@ -143,7 +144,7 @@ export function Journeys() {
           </TextButton>
         </div>
         <p id="results-count" className={styles.resultsCount} role="status">
-          {resultsSummary(matches.length, filters)}
+          {resultsSummary(matches.length, filters, places)}
         </p>
         <div key={gridKey} className={cx(styles.grid, "reveal")} id="tour-grid">
           {matches.map((t, i) => (

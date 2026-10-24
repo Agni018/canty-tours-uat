@@ -7,6 +7,7 @@ import { Toast } from "@/components/overlays/Toast";
 import { Footer } from "@/components/sections/Footer";
 import { Header } from "@/components/sections/Header";
 import { phone } from "@/data/site";
+import { getContent } from "@/lib/content";
 import "./globals.css";
 
 // Self-hosted at build time by next/font (no request to Google from the visitor's browser).
@@ -83,7 +84,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
             __html: JSON.stringify(travelAgency).replace(/</g, "\\u003c"),
           }}
         />
-        <JourneyProvider>
+        <JourneyProvider content={getContent()}>
           <a className="skip" href="#main">
             Skip to content
           </a>

@@ -2,15 +2,18 @@
 
 import { useJourneys } from "@/components/JourneyProvider";
 import { Modal } from "@/components/ui/Modal";
-import { places } from "@/data/places";
-import { tours } from "@/data/tours";
+import type { PhotoCredit } from "@/data/tours";
 import styles from "./PrivacyDialog.module.css";
-
-const sourced = tours.filter((t) => t.source);
 
 /** Privacy notes plus the photo credits and itinerary sources the licences and owner require. */
 export function PrivacyDialog() {
-  const { privacyOpen, setPrivacyOpen } = useJourneys();
+  const { privacyOpen, setPrivacyOpen, places, tours } = useJourneys();
+  const sourced = tours.filter((t) => t.source);
+  // Picker photos, then journey photos with their own credit; a shared photo is listed once.
+  const credits = new Map<string, { name: string; credit: PhotoCredit }>();
+  for (const { name, credit } of [...places, ...tours])
+    if (credit && !credits.has(credit.sourcePage))
+      credits.set(credit.sourcePage, { name, credit });
 
   return (
     <Modal
@@ -45,20 +48,20 @@ export function PrivacyDialog() {
         Bengal Tourism.
       </p>
       <details className={styles.credits}>
-        <summary>“Where to?” photo credits</summary>
+        <summary>Destination and journey photo credits</summary>
         <p>
           Photos are resized or cropped for display. Each image retains its
           linked license.
         </p>
         <ul>
-          {places.map((p) => (
-            <li key={p.name}>
-              <a href={p.credit.sourcePage} target="_blank" rel="noopener">
-                {p.name}
+          {[...credits.values()].map(({ name, credit }) => (
+            <li key={credit.sourcePage}>
+              <a href={credit.sourcePage} target="_blank" rel="noopener">
+                {name}
               </a>
-              {` — ${p.credit.creator}. `}
-              <a href={p.credit.licenseUrl} target="_blank" rel="noopener">
-                {p.credit.license}
+              {` — ${credit.creator}. `}
+              <a href={credit.licenseUrl} target="_blank" rel="noopener">
+                {credit.license}
               </a>
               .
             </li>

@@ -2,14 +2,14 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { JourneyDetail } from "@/components/sections/JourneyDetail";
 import { phone } from "@/data/site";
-import { tours } from "@/data/tours";
-import { durationText } from "@/lib/journeys";
+import { getContent } from "@/lib/content";
+import { durationText, relatedTours } from "@/lib/journeys";
 
 // One page per journey, built ahead of time; any other id is a 404 (the static export needs this).
 export const dynamicParams = false;
 
 export function generateStaticParams() {
-  return tours.map((t) => ({ id: t.id }));
+  return getContent().tours.map((t) => ({ id: t.id }));
 }
 
 type Props = { params: Promise<{ id: string }> };
@@ -19,7 +19,7 @@ const siteUrl = process.env.SITE_URL;
 
 async function tourFor(params: Props["params"]) {
   const { id } = await params;
-  return tours.find((t) => t.id === id);
+  return getContent().tours.find((t) => t.id === id);
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -88,7 +88,7 @@ export default async function JourneyPage({ params }: Props) {
           __html: JSON.stringify(trip).replace(/</g, "\\u003c"),
         }}
       />
-      <JourneyDetail tour={t} />
+      <JourneyDetail tour={t} related={relatedTours(getContent().tours, t)} />
     </>
   );
 }

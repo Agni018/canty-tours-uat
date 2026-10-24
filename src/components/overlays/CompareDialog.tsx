@@ -4,7 +4,7 @@ import type { ReactNode } from "react";
 import { useJourneys } from "@/components/JourneyProvider";
 import { Button } from "@/components/ui/Button";
 import { Modal } from "@/components/ui/Modal";
-import { tours, type Tour } from "@/data/tours";
+import type { Tour } from "@/data/tours";
 import { durationText } from "@/lib/journeys";
 import { journeyPath } from "@/lib/utils";
 import { Icon } from "@/components/ui/Icon";
@@ -12,7 +12,7 @@ import styles from "./CompareDialog.module.css";
 
 /** Side-by-side table of the selected journeys. */
 export function CompareDialog() {
-  const { compared, compareOpen, setCompareOpen } = useJourneys();
+  const { tours, compared, compareOpen, setCompareOpen } = useJourneys();
   const items = tours.filter((t) => compared.includes(t.id));
 
   const rows: [string, (t: Tour) => ReactNode][] = [
