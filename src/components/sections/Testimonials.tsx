@@ -20,7 +20,7 @@ export function Testimonials() {
           titleId="stories-title"
           intro="A few words from people who travelled with Canty Tours."
         />
-        <ul className={cx(styles.list, "reveal")}>
+        <ul className={cx(styles.list, "stagger")}>
           {testimonials.map((t) => (
             <li key={t.name + t.trip}>
               <figure>

@@ -9,10 +9,11 @@ import {
 import { useJourneys } from "@/components/JourneyProvider";
 import { Chip } from "@/components/ui/Chip";
 import { Icon } from "@/components/ui/Icon";
+import { Photo } from "@/components/ui/Photo";
 import { regionOptions, type RegionFilter } from "@/data/options";
 import { places, placeValue, type Place } from "@/data/places";
 import { destinationLabel } from "@/lib/journeys";
-import { asset, cx } from "@/lib/utils";
+import { cx } from "@/lib/utils";
 import styles from "./DestinationPicker.module.css";
 
 type DestinationPickerProps = {
@@ -20,9 +21,6 @@ type DestinationPickerProps = {
   className?: string;
   labelClassName?: string;
 };
-
-/** 480px copy of a place photo (public/assets/thumbs/): the picker shows them at about 150px. */
-const thumb = (image: string) => asset(`thumbs/${image.split("/").pop()}`);
 
 const regionChoiceLabel = (value: string) => {
   if (value === "Kerala") return "All Kerala";
@@ -205,12 +203,11 @@ export function DestinationPicker({
         }}
       >
         {place && (
-          <img
+          <Photo
             className={styles.thumb}
-            src={thumb(place.image)}
+            src={place.image}
+            sizes="24px"
             alt=""
-            width={24}
-            height={24}
             draggable={false}
           />
         )}
@@ -258,13 +255,10 @@ export function DestinationPicker({
               onClick={() => choosePlace(p)}
             >
               <span className={styles.photo}>
-                <img
-                  src={thumb(p.image)}
+                <Photo
+                  src={p.image}
+                  sizes="(max-width: 540px) 45vw, 170px"
                   alt=""
-                  loading="lazy"
-                  decoding="async"
-                  width={640}
-                  height={400}
                   draggable={false}
                 />
                 <span className={styles.check}>

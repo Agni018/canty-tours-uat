@@ -1,5 +1,6 @@
-/* Cards rise in one after another (--i = position in the grid) whenever the grid is rebuilt. */
-/* After a destination search the matching cards pulse an orange ring once. */
+/* In the journey grid (.enter) cards rise in one after another (--i = position in the grid)
+   whenever the grid is rebuilt. After a destination search the matching cards pulse an orange
+   ring once. */
 @keyframes found {
   0%,
   100% {
@@ -18,40 +19,50 @@
     transform: translateY(20px);
   }
 }
+/* No overflow: hidden here, so the hover shadow (::after) can show; .photo clips the image. */
 .card {
   position: relative;
+  isolation: isolate;
   border: 1px solid var(--line);
   background: var(--surface);
   border-radius: 16px;
-  overflow: hidden;
   display: flex;
   flex-direction: column;
+  transition: transform var(--dur-base) var(--ease-out);
+}
+/* The lifted card's shadow, faded in with opacity rather than animating box-shadow. */
+.card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  box-shadow: 0 28px 48px -26px color-mix(in srgb, var(--ink) 55%, transparent);
+  opacity: 0;
+  transition: opacity var(--dur-base) var(--ease-out);
+}
+.card.enter {
   animation: cardIn var(--dur-reveal) var(--ease-out) backwards;
   animation-delay: calc(min(var(--i, 0), 8) * 60ms);
-  transition:
-    transform var(--dur-base) var(--ease-out),
-    box-shadow var(--dur-base) var(--ease-out);
 }
-.card.found {
+/* .enter too, so it outranks the scroll version of .card.enter further down. */
+.card.enter.found {
   animation-name: cardIn, found;
   animation-duration: var(--dur-reveal), 2.8s;
   animation-delay: calc(min(var(--i, 0), 8) * 60ms), 450ms;
 }
-.card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 24px 44px -26px rgb(25 62 54 / 0.5);
+.card:active {
+  transform: scale(0.985);
 }
 .photo {
   height: 225px;
   position: relative;
   overflow: hidden;
+  border-radius: 15px 15px 0 0;
 }
 .photo img {
   height: 100%;
   transition: transform var(--dur-reveal) var(--ease-out);
-}
-.card:hover .photo img {
-  transform: scale(1.05);
 }
 .photo .tag {
   position: absolute;
@@ -129,8 +140,8 @@
   font-weight: 600;
   transition: color var(--dur-fast) var(--ease-out);
 }
-.card:hover .view {
-  color: var(--orange);
+.view svg {
+  transition: transform var(--dur-base) var(--ease-out);
 }
 /* Above the card-wide link, so it toggles instead of opening the journey. */
 .compare {
@@ -150,6 +161,58 @@
   width: 18px;
 }
 
+/* Position in its row of the journey grid (3 columns, 2 at 800px, 1 at 540px). */
+.card:nth-child(3n + 2) {
+  --col: 1;
+}
+.card:nth-child(3n) {
+  --col: 2;
+}
+/* Scrolling: in the journey grid each card also rises as it reaches the screen, those further
+   right in a row a little later. The time-based rise above still plays when the grid is rebuilt
+   in view; this one only holds back cards that haven't been scrolled to yet. */
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) {
+    .card.enter {
+      animation:
+        cardIn var(--dur-reveal) var(--ease-out) backwards,
+        cardIn var(--ease-out) backwards;
+      animation-delay: calc(min(var(--i, 0), 8) * 60ms), 0s;
+      animation-timeline: auto, view();
+      animation-range:
+        normal,
+        entry calc(var(--col, 0) * 8%) entry calc(var(--col, 0) * 8% + 40%);
+    }
+  }
+}
+/* Lift, shadow, a slow photo zoom and the arrow nudging forward: on hover for mouse and
+   trackpad users (touch screens would keep the state after a tap), and on keyboard focus. */
+@media (hover: hover) {
+  .card:hover {
+    transform: translateY(-6px);
+  }
+  .card:hover:active {
+    transform: translateY(-2px) scale(0.985);
+  }
+  .card:hover::after {
+    opacity: 1;
+  }
+  .card:hover .photo img {
+    transform: scale(1.06);
+  }
+  .card:hover .view {
+    color: var(--orange);
+  }
+  .card:hover .view svg {
+    transform: translate(3px, -3px);
+  }
+}
+.card:has(.link:focus-visible) {
+  transform: translateY(-6px);
+}
+.card:has(.link:focus-visible)::after {
+  opacity: 1;
+}
 @media (max-width: 1100px) {
   .photo {
     height: 195px;
@@ -162,6 +225,12 @@
   .body h3 {
     min-height: 0;
   }
+  .card:nth-child(n) {
+    --col: 0;
+  }
+  .card:nth-child(2n) {
+    --col: 1;
+  }
 }
 @media (max-width: 540px) {
   .photo {
@@ -172,5 +241,8 @@
   }
   .route {
     min-height: 0;
+  }
+  .card:nth-child(n) {
+    --col: 0;
   }
 }

@@ -8,10 +8,11 @@
   padding: 134px 0 48px;
   color: var(--on-dark);
 }
+/* clip, not hidden, so the photo's parallax follows the page (see Hero.module.css). */
 .backdrop {
   position: absolute;
   inset: 0;
-  overflow: hidden;
+  overflow: clip;
   background: var(--ink); /* shown until the photo loads */
 }
 .backdrop img {
@@ -220,6 +221,59 @@
 }
 .steps p {
   font-size: var(--text-sm);
+}
+/* Motion. The header text rises in on load, line by line, like the home hero. Down the
+   itinerary each day drives its own timeline (--day): the line to the next day draws itself and
+   the day's dot pops in as the day moves up the screen. */
+@keyframes heroIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+}
+@keyframes drawLine {
+  from {
+    transform: scaleY(0);
+  }
+}
+@keyframes pop {
+  from {
+    opacity: 0;
+    transform: scale(0.3);
+  }
+}
+.heroContent > * {
+  animation: heroIn var(--dur-reveal) var(--ease-out) backwards;
+}
+.heroContent > :nth-child(2) {
+  animation-delay: 80ms;
+}
+.heroContent > :nth-child(3) {
+  animation-delay: 160ms;
+}
+.heroContent > :nth-child(4) {
+  animation-delay: 240ms;
+}
+.heroContent > :nth-child(5) {
+  animation-delay: 320ms;
+}
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) {
+    .days li {
+      view-timeline-name: --day;
+    }
+    .days li::before {
+      transform-origin: top;
+      animation: drawLine linear backwards;
+      animation-timeline: --day;
+      animation-range: cover 10% cover 45%;
+    }
+    .dayNumber::before {
+      animation: pop var(--ease-out) backwards;
+      animation-timeline: --day;
+      animation-range: cover 5% cover 20%;
+    }
+  }
 }
 /* Stays in view while the route scrolls, on screens tall enough to show all of it; it clears
    the fixed header (94px). */

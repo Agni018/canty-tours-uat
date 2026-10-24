@@ -4,7 +4,7 @@ import styles from "./IntroStrip.module.css";
 
 export function IntroStrip() {
   return (
-    <div className={cx(styles.strip, "wrap")}>
+    <div className={cx(styles.strip, "wrap", "reveal")}>
       <span>Hills, backwaters &amp; beaches</span>
       <Icon name="spark" className={styles.spark} />
       <span>Room for your own rhythm</span>

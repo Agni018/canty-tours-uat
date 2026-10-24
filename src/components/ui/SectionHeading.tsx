@@ -19,7 +19,7 @@ export function SectionHeading({
   intro,
 }: SectionHeadingProps) {
   return (
-    <div className={cx(styles.heading, "reveal")}>
+    <div className={cx(styles.heading, "stagger")}>
       <div>
         <p className="eyebrow" id={eyebrowId}>
           {eyebrow}

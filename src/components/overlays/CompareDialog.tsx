@@ -27,7 +27,8 @@ export function CompareDialog() {
       (t) => (
         // Closing first, so the comparison isn't still open on coming back.
         <Button
-          href={`${journeyPath(t.id)}#enquire`}
+          href={journeyPath(t.id)}
+          section="enquire"
           className={styles.planButton}
           onClick={() => setCompareOpen(false)}
         >

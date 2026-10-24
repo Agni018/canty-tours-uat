@@ -27,7 +27,7 @@ export function BeyondKerala() {
             </>
           }
         />
-        <div className={cx(styles.grid, "reveal")}>
+        <div className={cx(styles.grid, "stagger")}>
           {indiaHighlights.map((d) => (
             <IndiaCard
               key={d.destination}

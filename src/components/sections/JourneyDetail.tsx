@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { TourCard } from "@/components/cards/TourCard";
 import { Icon } from "@/components/ui/Icon";
+import { SectionLink } from "@/components/ui/SectionLink";
+import { Photo } from "@/components/ui/Photo";
 import { tours, type Tour } from "@/data/tours";
 import {
   durationText,
@@ -8,7 +10,7 @@ import {
   regionLabel,
   relatedTours,
 } from "@/lib/journeys";
-import { asset, cx } from "@/lib/utils";
+import { cx } from "@/lib/utils";
 import { EnquiryForm } from "./EnquiryForm";
 import styles from "./JourneyDetail.module.css";
 
@@ -42,7 +44,13 @@ export function JourneyDetail({ tour: t }: { tour: Tour }) {
     <article>
       <header className={styles.hero}>
         <div className={styles.backdrop}>
-          <img src={asset(t.image)} alt={t.alt} fetchPriority="high" />
+          <Photo
+            src={t.image}
+            alt={t.alt}
+            sizes="100vw"
+            priority
+            className="parallax"
+          />
         </div>
         <div className={cx("wrap", styles.heroContent)}>
           <nav aria-label="Breadcrumb">
@@ -51,7 +59,9 @@ export function JourneyDetail({ tour: t }: { tour: Tour }) {
                 <Link href="/">Home</Link>
               </li>
               <li>
-                <Link href="/#journeys">Journeys</Link>
+                <SectionLink page="/" section="journeys">
+                  Journeys
+                </SectionLink>
               </li>
               <li aria-current="page">{t.name}</li>
             </ol>
@@ -95,7 +105,7 @@ export function JourneyDetail({ tour: t }: { tour: Tour }) {
 
           <section aria-labelledby="highlights">
             <h2 id="highlights">Highlights</h2>
-            <ul className={styles.highlights}>
+            <ul className={cx(styles.highlights, "stagger")}>
               {highlightList(t).map((h) => (
                 <li key={h}>
                   <Icon name="spark" className={styles.spark} />
@@ -107,7 +117,7 @@ export function JourneyDetail({ tour: t }: { tour: Tour }) {
 
           <section aria-labelledby="days">
             <h2 id="days">Day by day</h2>
-            <ol className={styles.days}>
+            <ol className={cx(styles.days, "stagger")}>
               {t.itinerary.map((day, i) => (
                 <li key={i}>
                   <span className={styles.dayNumber}>Day {i + 1}</span>
@@ -124,7 +134,7 @@ export function JourneyDetail({ tour: t }: { tour: Tour }) {
 
           <section aria-labelledby="planning">
             <h2 id="planning">How planning works</h2>
-            <ol className={styles.steps}>
+            <ol className={cx(styles.steps, "stagger")}>
               {steps.map((s, i) => (
                 <li key={s.title}>
                   <span>{String(i + 1).padStart(2, "0")}</span>
@@ -149,7 +159,7 @@ export function JourneyDetail({ tour: t }: { tour: Tour }) {
       >
         <div className="wrap">
           <h2 id="more-title">More journeys like this</h2>
-          <div className={styles.moreGrid}>
+          <div className={cx(styles.moreGrid, "stagger")}>
             {relatedTours(tours, t).map((r) => (
               <TourCard key={r.id} tour={r} />
             ))}
@@ -158,7 +168,7 @@ export function JourneyDetail({ tour: t }: { tour: Tour }) {
       </section>
 
       {/* Phones and tablets: the form sits below the route, so this keeps it one tap away. */}
-      <a href="#enquire" className={styles.mobileBar}>
+      <SectionLink section="enquire" className={styles.mobileBar}>
         <span>
           {durationText(t)}
           <small>Price on request</small>
@@ -166,7 +176,7 @@ export function JourneyDetail({ tour: t }: { tour: Tour }) {
         <span className={styles.mobileCta}>
           Plan this journey <Icon name="arrow" />
         </span>
-      </a>
+      </SectionLink>
     </article>
   );
 }

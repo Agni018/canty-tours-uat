@@ -1,0 +1,7 @@
+/* The blurred preview (set inline by Photo) fills the box behind the photo until it loads.
+   It matches the photo's cover crop; the photo paints over it as soon as it arrives. */
+.photo {
+  background-size: cover;
+  background-position: center;
+  background-color: var(--green-soft);
+}

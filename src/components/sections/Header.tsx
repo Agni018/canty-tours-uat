@@ -1,9 +1,9 @@
 "use client";
 
-import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useJourneys } from "@/components/JourneyProvider";
 import { Brand } from "@/components/ui/Brand";
+import { SectionLink } from "@/components/ui/SectionLink";
 import { Button } from "@/components/ui/Button";
 import { Icon } from "@/components/ui/Icon";
 import { cx } from "@/lib/utils";
@@ -49,15 +49,26 @@ export function Header() {
             if ((e.target as Element).closest("a")) setMenuOpen(false);
           }}
         >
-          <Link href="/#destinations">Discover Kerala</Link>
-          <Link href="/#journeys" onClick={() => showRegion("Kerala")}>
+          <SectionLink page="/" section="destinations">
+            Discover Kerala
+          </SectionLink>
+          <SectionLink
+            page="/"
+            section="journeys"
+            onClick={() => showRegion("Kerala")}
+          >
             Kerala journeys
-          </Link>
-          <Link href="/#beyond-kerala">Beyond Kerala</Link>
-          <Link href="/#faq">Good to know</Link>
+          </SectionLink>
+          <SectionLink page="/" section="beyond-kerala">
+            Beyond Kerala
+          </SectionLink>
+          <SectionLink page="/" section="faq">
+            Good to know
+          </SectionLink>
         </nav>
         <Button
-          href="/#plan"
+          href="/"
+          section="plan"
           variant={solid ? "orange" : "ghost"}
           small
           arrow

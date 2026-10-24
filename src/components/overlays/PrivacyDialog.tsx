@@ -30,7 +30,9 @@ export function PrivacyDialog() {
         apply.
       </p>
       <p>
-        Journey comparisons stay in this tab and reset when you reload. Hosting
+        Journey comparisons stay in this tab and reset when you reload. To load
+        faster next time, your browser keeps copies of the site’s photos,
+        scripts and fonts; nothing about you is stored with them. Hosting
         services may process routine technical request logs.
       </p>
       <h3>Photography</h3>

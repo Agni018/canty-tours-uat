@@ -1,31 +1,43 @@
+/* No overflow: hidden on the card, so its hover shadow (::after) can show; .media clips the
+   photo, rounded on the side that meets the card's edge. */
 .card {
+  position: relative;
+  isolation: isolate;
   display: flex;
   align-items: center;
   gap: 20px;
   text-align: left;
   background: var(--surface);
   border: 1px solid var(--line);
-  border-radius: 10px;
-  overflow: hidden;
+  border-radius: 16px;
   padding: 0;
-  transition:
-    transform var(--dur-base) var(--ease-out),
-    box-shadow var(--dur-base) var(--ease-out);
+  transition: transform var(--dur-base) var(--ease-out);
 }
-.card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 22px 40px -26px rgb(25 62 54 / 0.5);
+.card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  box-shadow: 0 26px 44px -26px color-mix(in srgb, var(--ink) 55%, transparent);
+  opacity: 0;
+  transition: opacity var(--dur-base) var(--ease-out);
 }
-.card > img {
+.card:active {
+  transform: scale(0.985);
+}
+.media {
   width: 40%;
   height: 185px;
   flex-shrink: 0;
+  overflow: hidden;
+  border-radius: 15px 0 0 15px;
+}
+.media img {
+  height: 100%;
   transition: transform var(--dur-reveal) var(--ease-out);
 }
-.card:hover > img {
-  transform: scale(1.05);
-}
-.card > span {
+.text {
   padding: 16px 16px 16px 0;
 }
 .card small {
@@ -42,17 +54,49 @@
   letter-spacing: var(--tracking-heading);
   margin: 8px 0 12px;
 }
-.card > span > span {
+.cta {
   display: block;
   font-size: var(--text-sm);
   font-weight: 600;
+  transition: color var(--dur-fast) var(--ease-out);
+}
+.cta svg {
+  transition: transform var(--dur-base) var(--ease-out);
 }
 
+/* Lift, shadow, a slow photo zoom and the arrow nudging forward: on hover for mouse and
+   trackpad users, and on keyboard focus. */
+@media (hover: hover) {
+  .card:hover {
+    transform: translateY(-6px);
+  }
+  .card:hover:active {
+    transform: translateY(-2px) scale(0.985);
+  }
+  .card:hover::after {
+    opacity: 1;
+  }
+  .card:hover .media img {
+    transform: scale(1.06);
+  }
+  .card:hover .cta {
+    color: var(--orange);
+  }
+  .card:hover .cta svg {
+    transform: translate(3px, -3px);
+  }
+}
+.card:focus-visible {
+  transform: translateY(-6px);
+}
+.card:focus-visible::after {
+  opacity: 1;
+}
 @media (max-width: 1100px) {
   .card {
     gap: 14px;
   }
-  .card > img {
+  .media {
     width: 35%;
     height: 190px;
   }
@@ -64,22 +108,27 @@
     align-items: stretch;
     gap: 0;
   }
-  .card > img {
+  .media {
     width: 100%;
     height: 160px;
+    border-radius: 15px 15px 0 0;
   }
-  .card > span {
+  .text {
     display: block;
     padding: 18px;
   }
 }
 @media (max-width: 540px) {
   .card {
-    display: flex;
-    gap: 0;
+    flex-direction: row;
+    align-items: center;
   }
-  .card > img {
+  .media {
     width: 38%;
     height: 150px;
+    border-radius: 15px 0 0 15px;
+  }
+  .text {
+    padding: 16px;
   }
 }

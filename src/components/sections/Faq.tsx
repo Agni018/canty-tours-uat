@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 import { whatsappLink } from "@/data/site";
 import { cx } from "@/lib/utils";
 import { Icon } from "@/components/ui/Icon";
+import { SectionLink } from "@/components/ui/SectionLink";
 import styles from "./Faq.module.css";
 
 const questions: { question: string; answer: ReactNode }[] = [
@@ -54,9 +55,9 @@ const questions: { question: string; answer: ReactNode }[] = [
         {
           "Absolutely. Kerala is our main focus, and you can also explore Rajasthan, Goa, Ladakh, Sikkim and the Golden Triangle here. Tell us about any other Indian destination you have in mind, or "
         }
-        <a href="#beyond-kerala">
+        <SectionLink section="beyond-kerala">
           explore beyond Kerala <Icon name="arrow" />
-        </a>
+        </SectionLink>
         .
       </>
     ),
@@ -83,7 +84,7 @@ export function Faq() {
           </a>
         </p>
       </div>
-      <div className={cx(styles.list, "reveal")}>
+      <div className={cx(styles.list, "stagger")}>
         {questions.map((q) => (
           <details key={q.question}>
             <summary>

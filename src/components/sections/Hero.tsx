@@ -1,9 +1,7 @@
-import { asset, cx } from "@/lib/utils";
+import { Photo } from "@/components/ui/Photo";
+import { cx } from "@/lib/utils";
 import { FinderBar } from "./FinderBar";
 import styles from "./Hero.module.css";
-
-const photo = asset("kerala.jpg");
-const photoSet = `${asset("kerala-960.jpg")} 960w, ${photo} 1600w`;
 
 /**
  * First screen: a full-bleed photo with the headline and the journey finder laid over it.
@@ -13,12 +11,12 @@ export function Hero() {
   return (
     <section className={styles.hero} aria-labelledby="hero-heading">
       <div className={styles.backdrop}>
-        <img
-          src={photo}
-          srcSet={photoSet}
+        <Photo
+          src="kerala.jpg"
           sizes="100vw"
           alt="A traditional boat on Kerala’s palm-lined backwaters"
-          fetchPriority="high"
+          priority
+          className="parallax"
         />
       </div>
       <div className={cx("wrap", styles.content)}>

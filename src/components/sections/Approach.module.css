@@ -4,34 +4,16 @@
   gap: 96px;
   align-items: center;
 }
+/* The arched frame clips the photo, so the photo can drift inside it (see Motion below). clip,
+   not hidden: hidden would make the frame a scroll container that the drift would follow. */
 .photo {
   height: 625px;
-  position: relative;
+  overflow: clip;
+  border-radius: 130px 130px 8px 8px;
 }
 .photo img {
   height: 100%;
-  border-radius: 130px 130px 8px 8px;
   object-position: 50%;
-}
-.note {
-  background: color-mix(in srgb, var(--marigold) 22%, var(--cream));
-  position: absolute;
-  right: -26px;
-  bottom: 32px;
-  padding: 24px 28px;
-  transform: rotate(-5deg);
-  font: 400 var(--text-h3) / 1.05 var(--serif);
-  letter-spacing: var(--tracking-heading);
-  box-shadow: 4px 8px 20px #0001;
-}
-.note em {
-  color: var(--accent-dark);
-}
-.note span {
-  display: block;
-  font: 600 var(--text-label) / 1 var(--sans);
-  letter-spacing: var(--tracking-label);
-  margin-top: 18px;
 }
 .copy > p:not(.eyebrow) {
   font-size: var(--text-base);
@@ -79,6 +61,23 @@
   border-color: var(--orange);
 }
 
+/* Motion: the photo is 15% taller than its frame and drifts down through it while the section
+   crosses the screen, a gentle parallax against the scrolling page. */
+@keyframes drift {
+  from {
+    transform: translateY(-13%);
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) {
+    .photo img {
+      height: 115%;
+      animation: drift linear both;
+      animation-timeline: view();
+      animation-range: cover;
+    }
+  }
+}
 @media (max-width: 1100px) {
   .approach {
     gap: 64px;
@@ -91,22 +90,13 @@
   }
   .photo {
     height: 480px;
-    margin-right: 20px;
-  }
-  .note {
-    right: -16px;
-    padding: 20px;
   }
 }
 @media (max-width: 540px) {
   .photo {
     height: 430px;
   }
-  .photo img {
+  .photo {
     border-radius: 110px 110px 8px 8px;
-  }
-  .note {
-    right: -20px;
-    bottom: 24px;
   }
 }

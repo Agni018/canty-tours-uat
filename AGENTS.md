@@ -48,7 +48,7 @@ npm run check    # format check + tests + build — run before every commit
 | Page sections                         | `src/components/sections/`                            |
 | Dialogs, bars, toasts                 | `src/components/overlays/`                            |
 | Shared page state                     | `src/components/JourneyProvider.tsx`                  |
-| Photos                                | `public/assets/` (~1200px wide JPEG, <300 KB)         |
+| Photos (JPEG originals)               | `public/assets/`, then `npm run images`               |
 
 ## Component rules
 
@@ -57,12 +57,23 @@ npm run check    # format check + tests + build — run before every commit
   `Field` (labelled input or textarea), `Modal` (native dialog), `SectionHeading`, `Brand`,
   `Icon`. Extend one with a prop before creating a near-duplicate.
 - Links between pages use `next/link` (`Button href`, `Brand` already do): it adds the base path.
+- Links to a section use `SectionLink section="faq"` (add `page="/"` from another page) or
+  `Button href="/" section="plan"`, never `#id` in an href: the address stays free of #, focus
+  moves to the section, and from another page the section shows once the page has loaded.
 - One component per file, named export, PascalCase file name, props typed with a `type`.
 - Add `"use client"` only to components that use state, effects or event handlers.
 - Content belongs in `src/data/`, not hard-coded in components, when it is a list or repeats.
 - Logic without React (filtering, formatting, message building) goes in `src/lib/` with a test.
-- Use `asset("file.jpg")` for image URLs (adds the GitHub Pages base path). Use `<img>`, not
-  `next/image` (image optimisation doesn't work in a static export).
+- Show photos with `<Photo src="file.jpg" alt sizes>`, never a bare `<img>`: it serves the
+  smallest WebP copy that fills the space and a blurred preview while it loads. `sizes` must say
+  how wide the photo really shows at each breakpoint. Add `priority` only to the largest photo
+  on the first screen. Not `next/image` (its optimisation doesn't work in a static export).
+- Photos: add the JPEG original (about 1200px wide, or 1600px for full-screen) to
+  `public/assets/`, then `npm run images` (it also runs before `dev` and `build`). It writes
+  hashed WebP copies to `public/assets/generated/` and `src/generated/photos.json`; both are
+  rebuilt from the originals and not committed. Use `asset("file")` for any other file URL.
+- `public/sw.js` keeps hashed files (photo copies, `/_next/static/`) on the device, because
+  GitHub Pages only allows a 10-minute cache. Never let it cache pages or unhashed files.
 - Keep the static export working: no API routes, server actions, middleware, cookies or headers.
   A backend means removing `output: "export"` and changing hosting; discuss that first.
 
@@ -98,7 +109,20 @@ npm run check    # format check + tests + build — run before every commit
   panels), `--dur-reveal` (page-load and scroll reveals). Exits are faster than entrances.
 - Animate only `transform` and `opacity` (plus colours for hover states).
 - Add the global `reveal` class to a block to fade it up as it scrolls into view (CSS scroll
-  timeline, no JavaScript). Put it on containers, not on every card.
+  timeline, no JavaScript). Put it on containers, not on every card. For a grid or list of
+  cards use `stagger` on the container instead: its items rise one after another. A long,
+  multi-row grid (the journey grid) lets each card use its own `view()` timeline, offset by
+  column (see `TourCard.module.css`).
+- Parallax: `parallax` on a photo at the top of a page (both heroes) makes it drift down slower
+  than the page. Any box that clips a scroll-animated element must use `overflow: clip`, not
+  `hidden`: `hidden` makes the box a scroll container and the animation follows it, not the page.
+- No animation libraries (Framer Motion etc.): CSS scroll timelines run off the main thread,
+  keep content in the HTML and simply don't animate in browsers without support.
+- Cards share one motion set: lift 6px, a deeper shadow, a slow photo zoom (1.06) and the arrow
+  nudging forward. Put hover effects inside `@media (hover: hover)` (touch screens would keep
+  them after a tap) and repeat them on keyboard focus. Fade a shadow in with an extra layer's
+  `opacity` rather than animating `box-shadow`; clip photos with a wrapper, not the card, so
+  that shadow can show.
 - Use one-shot animations with `backwards` fill so they never block hover transitions.
 - `prefers-reduced-motion: reduce` turns all animation and transitions off in `globals.css`;
   never work around it, and never make content depend on an animation finishing.

@@ -145,7 +145,8 @@ export function Journeys() {
         <p id="results-count" className={styles.resultsCount} role="status">
           {resultsSummary(matches.length, filters)}
         </p>
-        <div key={gridKey} className={cx(styles.grid, "reveal")} id="tour-grid">
+        {/* Each card reveals itself as it scrolls in (see TourCard), so no reveal on the grid. */}
+        <div key={gridKey} className={styles.grid} id="tour-grid">
           {matches.map((t, i) => (
             <TourCard
               key={t.id}

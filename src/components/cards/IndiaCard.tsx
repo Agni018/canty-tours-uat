@@ -1,5 +1,5 @@
-import { asset } from "@/lib/utils";
 import { Icon } from "@/components/ui/Icon";
+import { Photo } from "@/components/ui/Photo";
 import styles from "./IndiaCard.module.css";
 
 type IndiaCardProps = {
@@ -22,12 +22,20 @@ export function IndiaCard({
 }: IndiaCardProps) {
   return (
     <button type="button" className={styles.card} onClick={onClick}>
-      <img src={asset(image)} alt={alt} loading="lazy" />
-      <span>
+      <span className={styles.media}>
+        <Photo
+          src={image}
+          alt={alt}
+          sizes="(max-width: 540px) 38vw, (max-width: 800px) 33vw, 200px"
+        />
+      </span>
+      <span className={styles.text}>
         <small>{tagline}</small>
         <strong>{name}</strong>
-        <span>
-          {cta} <Icon name="arrow" />
+        <span className={styles.cta}>
+          {/* A no-break space keeps the arrow with the last word when the line wraps. */}
+          {cta}&nbsp;
+          <Icon name="arrow" />
         </span>
       </span>
     </button>

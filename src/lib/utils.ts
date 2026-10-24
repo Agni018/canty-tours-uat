@@ -8,9 +8,42 @@ export function asset(file: string): string {
   return `${process.env.NEXT_PUBLIC_BASE_PATH ?? ""}/assets/${file}`;
 }
 
-/** Scrolls a page section (by id) into view. */
-export function scrollToSection(id: string): void {
-  document.getElementById(id)?.scrollIntoView();
+/**
+ * Scrolls a page section (by id) into view, gliding unless the visitor prefers reduced motion.
+ * With `focus`, keyboard focus moves there too, as following a link should. Returns false when
+ * the section isn't on this page.
+ */
+export function scrollToSection(
+  id: string,
+  { focus = false, instant = false } = {},
+): boolean {
+  const target = document.getElementById(id);
+  if (!target) return false;
+  const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  target.scrollIntoView({
+    behavior: instant || reduced ? "instant" : "smooth",
+  });
+  if (focus) {
+    if (!target.hasAttribute("tabindex")) target.setAttribute("tabindex", "-1");
+    target.focus({ preventScroll: true });
+  }
+  return true;
+}
+
+// Section to show once the next page has loaded (see SectionLink and SectionScroll). Kept in
+// memory, not in the address: links between pages navigate within the app, so it survives.
+let pendingSection: string | null = null;
+
+/** Remembers a section for SectionScroll to show after a navigation. */
+export function setPendingSection(id: string): void {
+  pendingSection = id;
+}
+
+/** The remembered section, cleared so it is used once. */
+export function takePendingSection(): string | null {
+  const id = pendingSection;
+  pendingSection = null;
+  return id;
 }
 
 /** Path of a journey's page, for next/link (which adds the base path itself). */

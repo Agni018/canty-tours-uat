@@ -68,11 +68,7 @@ function useJourneyState() {
   useEffect(() => {
     const search = filtersToQuery(filters, location.search);
     if (search !== location.search)
-      history.replaceState(
-        history.state,
-        "",
-        location.pathname + search + location.hash,
-      );
+      history.replaceState(history.state, "", location.pathname + search);
   }, [filters]);
 
   return {

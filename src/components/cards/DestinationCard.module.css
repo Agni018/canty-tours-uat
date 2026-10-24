@@ -1,26 +1,54 @@
+/* No overflow: hidden on the card, so its hover shadow (::before) can show; .media clips the
+   photo and its shading. */
 .card {
   padding: 0;
   position: relative;
+  isolation: isolate;
   height: 355px;
-  overflow: hidden;
   border: 0;
-  border-radius: 10px;
+  border-radius: 16px;
   text-align: left;
   background: var(--ink);
   color: var(--on-dark);
+  transition: transform var(--dur-base) var(--ease-out);
 }
-.card:after {
+.card::before {
   content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(0deg, #082c25c4, transparent 65%, #082c2520);
+  z-index: -1;
+  border-radius: inherit;
+  box-shadow: 0 30px 50px -28px color-mix(in srgb, var(--ink) 70%, transparent);
+  opacity: 0;
+  transition: opacity var(--dur-base) var(--ease-out);
 }
-.card img {
+.card:active {
+  transform: scale(0.985);
+}
+.media {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  border-radius: inherit;
+}
+.media img {
   height: 100%;
   transition: transform var(--dur-reveal) var(--ease-out);
 }
-.card:hover img {
-  transform: scale(1.06);
+/* Shading for the text: a fixed layer (::after) and a deeper one that fades in on hover. */
+.media::before,
+.media::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+}
+.media::before {
+  background: linear-gradient(0deg, #082c25e6, #082c2533 70%);
+  opacity: 0;
+  transition: opacity var(--dur-base) var(--ease-out);
+}
+.media::after {
+  background: linear-gradient(0deg, #082c25c4, transparent 65%, #082c2520);
 }
 .top {
   position: absolute;
@@ -45,6 +73,7 @@
   gap: 12px;
   font: 400 var(--text-h3) / 1 var(--serif);
   letter-spacing: var(--tracking-heading);
+  transition: transform var(--dur-base) var(--ease-out);
 }
 .bottom small {
   display: block;
@@ -67,12 +96,45 @@
     color var(--dur-base) var(--ease-out),
     border-color var(--dur-base) var(--ease-out);
 }
-.card:hover .arrow {
-  background: var(--on-dark);
-  border-color: var(--on-dark);
-  color: var(--ink);
+.arrow svg {
+  transition: transform var(--dur-base) var(--ease-out);
 }
 
+/* Lift, shadow, deeper shading, a slow photo zoom, the text easing up and the arrow filling
+   and nudging forward: on hover for mouse and trackpad users, and on keyboard focus. */
+@media (hover: hover) {
+  .card:hover {
+    transform: translateY(-6px);
+  }
+  .card:hover:active {
+    transform: translateY(-2px) scale(0.985);
+  }
+  .card:hover::before,
+  .card:hover .media::before {
+    opacity: 1;
+  }
+  .card:hover .media img {
+    transform: scale(1.06);
+  }
+  .card:hover .bottom {
+    transform: translateY(-4px);
+  }
+  .card:hover .arrow {
+    background: var(--on-dark);
+    border-color: var(--on-dark);
+    color: var(--ink);
+  }
+  .card:hover .arrow svg {
+    transform: translate(2px, -2px);
+  }
+}
+.card:focus-visible {
+  transform: translateY(-6px);
+}
+.card:focus-visible::before,
+.card:focus-visible .media::before {
+  opacity: 1;
+}
 @media (max-width: 1100px) {
   .top,
   .bottom {

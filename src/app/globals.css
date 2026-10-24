@@ -104,9 +104,11 @@ button:disabled {
   outline: 3px solid var(--marigold);
   outline-offset: 4px;
 }
+/* height: auto so the width/height attributes (which Photo sets) only give the shape. */
 img {
   display: block;
   width: 100%;
+  height: auto;
   object-fit: cover;
 }
 h1,
@@ -182,8 +184,9 @@ p {
 .skip:focus {
   top: 10px;
 }
-/* The skip link's target: focused by script, so no ring. */
-main:focus {
+/* Targets of SectionLink and the skip link: focus moves there so the next Tab continues from
+   that point, as with a #link; a ring around a whole section would only distract. */
+:is(main, section, form)[tabindex="-1"]:focus {
   outline: none;
 }
 
@@ -208,6 +211,48 @@ main:focus {
       animation-timeline: view();
       animation-range: entry 0% entry 60%;
     }
+    /* A grid or list of cards: its items rise one after another as it scrolls into view. The
+       container's own timeline drives every item, each starting 10% later than the last. */
+    .stagger {
+      view-timeline-name: --stagger;
+    }
+    .stagger > * {
+      animation: rise var(--ease-out) backwards;
+      animation-timeline: --stagger;
+      animation-range: entry calc(var(--stagger-step, 0) * 10%) entry
+        calc(var(--stagger-step, 0) * 10% + 50%);
+    }
+    .stagger > :nth-child(2) {
+      --stagger-step: 1;
+    }
+    .stagger > :nth-child(3) {
+      --stagger-step: 2;
+    }
+    .stagger > :nth-child(4) {
+      --stagger-step: 3;
+    }
+    .stagger > :nth-child(5) {
+      --stagger-step: 4;
+    }
+    .stagger > :nth-child(n + 6) {
+      --stagger-step: 5;
+    }
+    /* A photo at the top of a page (hero) drifts down at a fifth of the scroll speed while the
+       page moves away from it: parallax. Its container must clip it with overflow: clip (hidden
+       would make the container a scroll container that the animation follows instead). Moving
+       down only, the gap it opens at the top is always already scrolled out of view. */
+    .parallax {
+      animation: drift-down linear both;
+      /* Inset 0: a plain view() takes the fixed header's scroll-padding as its edge, which
+         started the drift 104px early and left a gap above the photo at the top of the page. */
+      animation-timeline: view(block 0px);
+      animation-range: exit;
+    }
+  }
+}
+@keyframes drift-down {
+  to {
+    transform: translateY(20%);
   }
 }
 

@@ -3,6 +3,9 @@ import { Montserrat, Playfair_Display } from "next/font/google";
 import type { ReactNode } from "react";
 import { JourneyProvider } from "@/components/JourneyProvider";
 import { PrivacyDialog } from "@/components/overlays/PrivacyDialog";
+import { SectionScroll } from "@/components/SectionScroll";
+import { ServiceWorker } from "@/components/ServiceWorker";
+import { SectionLink } from "@/components/ui/SectionLink";
 import { Toast } from "@/components/overlays/Toast";
 import { Footer } from "@/components/sections/Footer";
 import { Header } from "@/components/sections/Header";
@@ -16,9 +19,14 @@ const serif = Playfair_Display({
   style: ["normal", "italic"],
   variable: "--font-serif",
 });
+// "optional": Montserrat is wider than its fallback, so swapping it in late re-wrapped body text
+// and moved the page on narrow phones. Now a page keeps whichever face it started with; only a
+// first visit on a slow connection starts with the fallback (later pages have the font cached).
+// Headings keep Playfair's default swap, so the brand face always shows.
 const sans = Montserrat({
   subsets: ["latin", "latin-ext"],
   variable: "--font-sans",
+  display: "optional",
 });
 
 const title = "Canty Tours — Kerala holidays, at your pace";
@@ -74,7 +82,13 @@ export const viewport: Viewport = {
 /** Every page: header, footer and the site-wide dialogs around the page content. */
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="en" className={`${sans.variable} ${serif.variable}`}>
+    // data-scroll-behavior: Next switches globals.css's smooth scrolling off while it changes
+    // pages, so a new page starts at its top instead of gliding there.
+    <html
+      lang="en"
+      className={`${sans.variable} ${serif.variable}`}
+      data-scroll-behavior="smooth"
+    >
       <body>
         <script
           type="application/ld+json"
@@ -84,9 +98,9 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           }}
         />
         <JourneyProvider>
-          <a className="skip" href="#main">
+          <SectionLink className="skip" section="main">
             Skip to content
-          </a>
+          </SectionLink>
           <Header />
           <main id="main" tabIndex={-1}>
             {children}
@@ -94,6 +108,8 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           <Footer />
           <PrivacyDialog />
           <Toast />
+          <SectionScroll />
+          <ServiceWorker />
         </JourneyProvider>
       </body>
     </html>

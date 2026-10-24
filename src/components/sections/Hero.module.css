@@ -22,10 +22,12 @@
   padding: 134px 0 48px;
   color: var(--on-dark);
 }
+/* clip, not hidden: hidden would make this box its own scroll container, and the photo's
+   scroll-linked parallax would follow it instead of the page. */
 .backdrop {
   position: absolute;
   inset: 0;
-  overflow: hidden;
+  overflow: clip;
   background: var(--ink); /* shown until the photo loads */
 }
 .backdrop > img {

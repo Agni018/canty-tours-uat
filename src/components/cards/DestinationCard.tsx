@@ -1,5 +1,5 @@
-import { asset } from "@/lib/utils";
 import { Icon } from "@/components/ui/Icon";
+import { Photo } from "@/components/ui/Photo";
 import styles from "./DestinationCard.module.css";
 
 type DestinationCardProps = {
@@ -22,7 +22,13 @@ export function DestinationCard({
 }: DestinationCardProps) {
   return (
     <button type="button" className={styles.card} onClick={onClick}>
-      <img src={asset(image)} alt={alt} loading="lazy" />
+      <span className={styles.media}>
+        <Photo
+          src={image}
+          alt={alt}
+          sizes="(max-width: 540px) 82vw, (max-width: 800px) 40vw, 470px"
+        />
+      </span>
       <span className={styles.top}>{tagline}</span>
       <span className={styles.bottom}>
         <span>

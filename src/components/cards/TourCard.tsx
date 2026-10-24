@@ -1,14 +1,18 @@
 import Link from "next/link";
 import type { CSSProperties } from "react";
 import { Icon } from "@/components/ui/Icon";
+import { Photo } from "@/components/ui/Photo";
 import type { Tour } from "@/data/tours";
 import { durationText, highlightList, regionLabel } from "@/lib/journeys";
-import { asset, cx, journeyPath } from "@/lib/utils";
+import { cx, journeyPath } from "@/lib/utils";
 import styles from "./TourCard.module.css";
 
 type TourCardProps = {
   tour: Tour;
-  /** Position in the grid; staggers the entrance animation. */
+  /**
+   * Position in the journey grid: the card then rises in, staggered by it, each time the grid
+   * is rebuilt. Elsewhere (similar journeys) the surrounding list's scroll reveal is used.
+   */
   index?: number;
   /** Briefly highlights the card after a destination search. */
   found?: boolean;
@@ -23,7 +27,7 @@ type TourCardProps = {
  */
 export function TourCard({
   tour: t,
-  index = 0,
+  index,
   found,
   compared,
   onCompareChange,
@@ -31,16 +35,20 @@ export function TourCard({
   return (
     <article
       id={`journey-${t.id}`}
-      className={cx(styles.card, found && styles.found)}
+      className={cx(
+        styles.card,
+        index !== undefined && styles.enter,
+        found && styles.found,
+      )}
       style={{ "--i": index } as CSSProperties}
       tabIndex={-1}
       aria-labelledby={`journey-title-${t.id}`}
     >
       <div className={styles.photo}>
-        <img
-          src={asset(t.image)}
+        <Photo
+          src={t.image}
           alt={t.alt}
-          loading="lazy"
+          sizes="(max-width: 540px) 100vw, (max-width: 1100px) 50vw, 400px"
           draggable={false}
         />
         <span className={styles.tag}>{t.style}</span>

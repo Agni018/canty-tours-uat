@@ -6,6 +6,7 @@ import type {
 import Link from "next/link";
 import { cx } from "@/lib/utils";
 import { Icon } from "./Icon";
+import { SectionLink } from "./SectionLink";
 import styles from "./Button.module.css";
 
 type Common = {
@@ -28,7 +29,11 @@ type Common = {
 type AsButton = Common &
   ButtonHTMLAttributes<HTMLButtonElement> & { href?: undefined };
 type AsLink = Common &
-  AnchorHTMLAttributes<HTMLAnchorElement> & { href: string };
+  AnchorHTMLAttributes<HTMLAnchorElement> & {
+    href: string;
+    /** A section of the `href` page to show, without putting #section in the address. */
+    section?: string;
+  };
 
 /** Primary call-to-action. Renders a link when `href` is given, otherwise a button. */
 export function Button({
@@ -62,7 +67,18 @@ export function Button({
   );
   if (rest.href !== undefined) {
     // next/link adds the site's base path to links between pages; outside links pass through.
-    const { href, ...linkProps } = rest as AsLink;
+    const { href, section, ...linkProps } = rest as AsLink;
+    if (section)
+      return (
+        <SectionLink
+          page={href}
+          section={section}
+          className={classes}
+          {...linkProps}
+        >
+          {content}
+        </SectionLink>
+      );
     return (
       <Link href={href} className={classes} {...linkProps}>
         {content}

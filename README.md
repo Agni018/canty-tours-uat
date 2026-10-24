@@ -39,7 +39,8 @@ src/
   data/                 Content: tours, destinations, dropdown options, contact details,
                         testimonials (real ones only; the section is hidden while empty)
   lib/                  Pure logic (filtering, labels, WhatsApp text) and its tests
-public/assets/          Photos, served as /assets/…
+public/assets/          Photo originals (JPEG); npm run images makes the WebP copies served
+scripts/images.mjs      Makes those copies (runs before dev and build)
 ```
 
 Each component keeps its styles next to it in a `*.module.css` file (CSS Modules, scoped to that
@@ -100,6 +101,11 @@ Earlier India-wide layout references:
 Original layout and copy; no competitor branding or proprietary descriptions copied. Earlier references checked 11 October 2026.
 
 ### Photos
+
+Originals live in `public/assets/` (JPEG). The site never serves them directly: `npm run images`
+(run automatically before `dev` and `build`) makes WebP copies at 320 to 1600px wide plus a tiny
+blurred preview, and the `Photo` component lets each browser pick the smallest copy that fills
+the space. After adding or replacing a photo, run `npm run images`.
 
 "Where to?" picker photos are stored in `public/assets/destinations/`, resized to 960px wide with
 camera metadata removed. Most come from Wikimedia Commons under CC BY-SA, CC BY or public domain;

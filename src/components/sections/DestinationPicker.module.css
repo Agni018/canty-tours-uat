@@ -110,7 +110,11 @@
   text-align: left;
   transition:
     background-color var(--dur-base) var(--ease-out),
-    border-color var(--dur-base) var(--ease-out);
+    border-color var(--dur-base) var(--ease-out),
+    transform var(--dur-fast) var(--ease-out);
+}
+.choice:active {
+  transform: scale(0.97);
 }
 .choice:hover {
   background: color-mix(in srgb, var(--ink) 5%, transparent);

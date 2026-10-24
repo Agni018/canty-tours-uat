@@ -31,7 +31,7 @@ export function Destinations() {
           </>
         }
       />
-      <div className={cx(styles.grid, "reveal")}>
+      <div className={cx(styles.grid, "stagger")}>
         {keralaHighlights.map((d) => (
           <DestinationCard
             key={d.destination}

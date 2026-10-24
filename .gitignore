@@ -1,9 +1,11 @@
 # Dependencies
 /node_modules
 
-# Next.js build output
+# Next.js build output, and the WebP photos made from public/assets (npm run images)
 /.next/
 /out/
+/public/assets/generated/
+/src/generated/
 next-env.d.ts
 *.tsbuildinfo
 
