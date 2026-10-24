@@ -124,4 +124,4 @@ Downloaded from Unsplash, re-sized for the site, used under the [Unsplash Licens
 - Goa, Arun Prakash: https://unsplash.com/photos/weeJiR-xXC0
 - Sikkim, North Bengal Tourism: https://unsplash.com/photos/E6rnGEJnvYo
 
-Typography: Playfair Display (headings) and Montserrat (text) from Google Fonts, self-hosted at build time by `next/font`.
+Typography: Playfair Display (headings) and Instrument Sans (text, labels, buttons) from Google Fonts, self-hosted at build time by `next/font`.

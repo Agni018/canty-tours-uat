@@ -91,7 +91,7 @@ npm run check    # format check + tests + build — run before every commit
   - Type: `--text-label` (12px uppercase labels, with `--tracking-label`), `--text-xs` 13,
     `--text-sm` 14, `--text-base` 16 (body and form controls), `--text-lg` 18, then fluid
     headings `--text-xl`, `--text-h3`, `--text-h2`, `--text-h1`, `--text-display`.
-  - Fonts: `--serif` (Playfair Display) for headings and card titles, `--sans` (Montserrat) for everything
+  - Fonts: `--serif` (Playfair Display) for headings and card titles, `--sans` (Instrument Sans) for everything
     else. Both are loaded by `next/font` in `src/app/layout.tsx`; italics are real italics.
 - Text is never smaller than 12px. The only exception is the logo lockup in `Brand`.
 - Breakpoints are `max-width` 1100px, 800px and 540px. Put a component's media queries at the end

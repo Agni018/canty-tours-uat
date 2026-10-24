@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Montserrat, Playfair_Display } from "next/font/google";
+import { Instrument_Sans, Playfair_Display } from "next/font/google";
 import type { ReactNode } from "react";
 import { JourneyProvider } from "@/components/JourneyProvider";
 import { PrivacyDialog } from "@/components/overlays/PrivacyDialog";
@@ -19,11 +19,12 @@ const serif = Playfair_Display({
   style: ["normal", "italic"],
   variable: "--font-serif",
 });
-// "optional": Montserrat is wider than its fallback, so swapping it in late re-wrapped body text
-// and moved the page on narrow phones. Now a page keeps whichever face it started with; only a
-// first visit on a slow connection starts with the fallback (later pages have the font cached).
-// Headings keep Playfair's default swap, so the brand face always shows.
-const sans = Montserrat({
+// Instrument Sans: a crisp, slightly condensed grotesque for text, labels and buttons.
+// "optional": swapping it in late still re-wraps the hero paragraph on 360-390px phones and moves
+// the page. A page keeps whichever face it started with; only a first visit on a slow connection
+// starts with the fallback (later pages have the font cached). Headings keep Playfair's default
+// swap, so the brand face always shows.
+const sans = Instrument_Sans({
   subsets: ["latin", "latin-ext"],
   variable: "--font-sans",
   display: "optional",

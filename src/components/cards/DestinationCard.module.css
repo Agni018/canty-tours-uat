@@ -47,8 +47,11 @@
   opacity: 0;
   transition: opacity var(--dur-base) var(--ease-out);
 }
+/* Darker at the top too, so the small label stays readable over bright sky (4.5:1). */
 .media::after {
-  background: linear-gradient(0deg, #082c25c4, transparent 65%, #082c2520);
+  background:
+    linear-gradient(180deg, #082c25cc, #082c25a6 20%, transparent 45%),
+    linear-gradient(0deg, #082c25c4, transparent 65%);
 }
 .top {
   position: absolute;
